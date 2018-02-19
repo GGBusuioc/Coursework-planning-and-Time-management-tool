@@ -8,22 +8,23 @@ from django.contrib.auth.models import (
     )
 
 class UserManager(BaseUserManager):
-    def create_user(self, email, password=None, is_active=True, is_staff=False, is_student=False, is_proffesor=False):
+    def create_user(self, email, password=None, is_active=True, is_staff=False, is_student=False, is_professor=False):
         if not email:
             raise ValueError("Users must have an email address")
         if not password:
             raise ValueError("Users must have a password")
 
         user_obj = self.model(
-            email = self.normalize_email(email)
+            email = self.normalize_email(email),
+            #password=password,
+            #is_student=True,
         )
-        user_obj.set_password(password) # change user password
 
+        user_obj.set_password(password) # change user password
         user_obj.active = is_active
         user_obj.staff = is_staff
-        user_obj.proffesor = is_proffesor
+        user_obj.professor = is_professor
         user_obj.student = is_student
-
         user_obj.save(using=self._db)
         return user_obj
 
@@ -43,14 +44,6 @@ class UserManager(BaseUserManager):
             )
         return user
 
-    def create_staffuser(self, email, password=None):
-        user = self.create_user(
-            email,
-            password=password,
-            is_staff=True,
-         )
-        return user
-
     def create_superuser(self, email, password=None):
         user = self.create_user(
             email,
@@ -59,12 +52,10 @@ class UserManager(BaseUserManager):
          )
         return user
 
-
-
 class User(AbstractBaseUser):
     email     = models.EmailField(max_length=255, unique=True)
-    name      = models.CharField(max_length=255, blank=True, null=True)
-    surname   = models.CharField(max_length=255, blank=True, null=True)
+    # name      = models.CharField(max_length=255, blank=True, null=True)
+    # surname   = models.CharField(max_length=255, blank=True, null=True)
     #timestamp = models.DateTimeField(auto_now_add=True)
 
     # able to login
@@ -89,7 +80,7 @@ class User(AbstractBaseUser):
         return True
 
     def has_module_perms(self, app_label):
-        return True    
+        return True
 
     def get_full_name(self):
         return ('%s %s') % (self.name, self.surname)
@@ -107,18 +98,24 @@ class User(AbstractBaseUser):
     def is_active(self):
         return self.active
 
-class StudentUser(models.Model):
+class StudentProfile(models.Model):
      user = models.OneToOneField(User, on_delete=models.CASCADE)
      # extend extra data
-     degree_type = models.CharField(max_length=255, blank=True, null=True)
-
-class ProfessorUser(models.Model):
-     user = models.OneToOneField(User, on_delete=models.CASCADE)
-     # extend extra data
-     department = models.CharField(max_length=255, blank=True, null=True)
+     # degree_type = models.CharField(max_length=255, blank=True, null=True)
+     department = models.CharField(max_length=100)
+     def __str__(self):
+         return "%s's profile" % self.user
 
 
-class StaffUser(models.Model):
-     user = models.OneToOneField(User, on_delete=models.CASCADE)
-     # extend extra data
-     department = models.CharField(max_length=255, blank=True, null=True)
+
+
+# class ProfessorUser(models.Model):
+#      user = models.OneToOneField(User, on_delete=models.CASCADE)
+#      # extend extra data
+#      department = models.CharField(max_length=255, blank=True, null=True)
+#
+#
+# class StaffUser(models.Model):
+#      user = models.OneToOneField(User, on_delete=models.CASCADE)
+#      # extend extra data
+#      department = models.CharField(max_length=255, blank=True, null=True)
