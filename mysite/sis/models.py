@@ -98,24 +98,15 @@ class User(AbstractBaseUser):
     def is_active(self):
         return self.active
 
-class StudentProfile(models.Model):
-     user = models.OneToOneField(User, on_delete=models.CASCADE)
-     # extend extra data
-     # degree_type = models.CharField(max_length=255, blank=True, null=True)
-     department = models.CharField(max_length=100)
-     def __str__(self):
-         return "%s's profile" % self.user
 
+class Module(models.Model):
+    name = models.CharField(max_length=255, unique=True)
+    description = models.CharField(max_length=255, blank=True, null=True)
+    def __str__(self):
+        return self.name
 
-
-
-# class ProfessorUser(models.Model):
-#      user = models.OneToOneField(User, on_delete=models.CASCADE)
-#      # extend extra data
-#      department = models.CharField(max_length=255, blank=True, null=True)
-#
-#
-# class StaffUser(models.Model):
-#      user = models.OneToOneField(User, on_delete=models.CASCADE)
-#      # extend extra data
-#      department = models.CharField(max_length=255, blank=True, null=True)
+class Membership(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    module = models.ForeignKey(Module, on_delete=models.CASCADE)
+    def __str__(self):
+        return ("%s %s" % (self.user, self.module))
