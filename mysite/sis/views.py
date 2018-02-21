@@ -15,13 +15,6 @@ from django.views.generic import View
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
 
-def home(request):
-    output = "LOL"
-    return HttpResponse(output)
-
-def index(request):
-    return HttpResponse("Index view")
-
 def login_user(request):
     if request.method == "POST":
         email = request.POST['email']
@@ -29,8 +22,13 @@ def login_user(request):
         user = authenticate(email=email, password=password)
         if user is not None:
             if user.is_active:
-                login(request, user)    
-                return render(request, 'sis/home.html')
+                login(request, user)
+                if user.is_student:
+                    return render(request, 'sis/student_home.html')
+                elif user.is_professor:
+                    return render(request, 'sis/professor_home.html')
+                elif user.is_staff:
+                    return render(request, 'sis/staff_home.html')
             else:
                 return render(request, {'error_message':'Invalid login'})
     return render(request, 'sis/login.html')
