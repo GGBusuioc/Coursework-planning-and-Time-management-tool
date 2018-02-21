@@ -16,8 +16,6 @@ class UserManager(BaseUserManager):
 
         user_obj = self.model(
             email = self.normalize_email(email),
-            #password=password,
-            #is_student=True,
         )
 
         user_obj.set_password(password) # change user password

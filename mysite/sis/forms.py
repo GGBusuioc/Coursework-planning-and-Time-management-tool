@@ -2,7 +2,21 @@ from django import forms
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.contrib.auth import get_user_model
 
+#from django.contrib.auth.forms import AuthenticationForm
+from django import forms
+
+
 User = get_user_model()
+
+
+class UserForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput)
+    # information about the class
+    class Meta:
+        model = User
+        fields = ['email', 'password']
+
+
 
 class UserAdminCreationForm(forms.ModelForm):
     """A form for creating new users. Includes all the required

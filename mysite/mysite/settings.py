@@ -121,3 +121,6 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'sis.User'
+#AUTHENTICATION_BACKENDS = ('sis.backends.MyAuthBackend','django.contrib.auth.backends.ModelBackend',)
+# Redirect to home URL after login (Default redirects to /accounts/profile/)
+LOGIN_REDIRECT_URL = '/'
