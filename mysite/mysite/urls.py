@@ -7,6 +7,6 @@ urlpatterns = [
     path('', include('sis.urls')),
     path('admin/', admin.site.urls),
     #path('sis/', include('django.contrib.auth.urls')),
-    re_path('staff_redirect/', views.staff_redirect, name="staff_redirect")
+    #path('staff_redirect/', views.staff_redirect, name="staff_redirect")
 
 ]

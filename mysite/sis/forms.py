@@ -4,10 +4,17 @@ from django.contrib.auth import get_user_model
 
 #from django.contrib.auth.forms import AuthenticationForm
 from django import forms
-
+from .models import *
 
 User = get_user_model()
 
+
+
+
+class ModuleForm(forms.ModelForm):
+    class Meta:
+        model = Module
+        fields = ['name', 'description']
 
 class UserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
