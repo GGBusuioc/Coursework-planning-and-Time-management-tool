@@ -9,12 +9,15 @@ from django.http import HttpResponseRedirect
 
 from sis.forms import UserForm
 from django.template import RequestContext
+from .models import Module
 
-from django.views.generic import View
+from django.views.decorators.csrf import csrf_exempt
 
-from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_protect
+from django.urls import reverse
 
+
+
+@csrf_exempt
 def login_user(request):
     if request.method == "POST":
         email = request.POST['email']
@@ -23,15 +26,19 @@ def login_user(request):
         if user is not None:
             if user.is_active:
                 login(request, user)
+                request.session['user_id'] = user.id
                 if user.is_student:
                     return render(request, 'sis/student_home.html')
+                    #return redirect('sis.views.index')
                 elif user.is_professor:
                     return render(request, 'sis/professor_home.html')
                 elif user.is_staff:
-                    return render(request, 'sis/staff_home.html')
+                    #return redirect('redirect_test', user=user)
+                    return redirect(staff_redirect)
             else:
                 return render(request, {'error_message':'Invalid login'})
     return render(request, 'sis/login.html')
+
 
 def logout_user(request):
     logout(request)
@@ -41,36 +48,12 @@ def logout_user(request):
     }
     return render(request, 'sis/login.html', context)
 
-# class UserFormView(View):
-#     form_class = UserForm
-#     template_name = 'sis/registration_form.html'
-#     #display blank form
-#     def get(self, request):
-#         form = self.form_class(None)
-#         return render(request, self.template_name, {'form':form})
-#
-#     # process form data
-#     @csrf_protect
-#     def post(self, request):
-#         form = self.form_class(request.POST)
-#
-#         if form.is_valid():
-#             # create an object from the form
-#             # without saving it to the database
-#             user = form.save(commit=False)
-#             # cleaned (normalized) data
-#             email = form.cleaned_data['email']
-#             password = form.cleaned_data['password']
-#
-#             user.set_password(password)
-#             # save to the database
-#             user.save()
-#
-#             user = authenticate(email=email, password=password)
-#             if user is not None:
-#                 if user.is_active:
-#                     # now logged in
-#                     login(request, user)
-#                     # request.user.
-#                     return redirect('sis:index')
-#         return render(request, self.template_name, {'form':form})
+def index(request):
+    return render(request, 'sis/index.html')
+
+
+
+def staff_redirect(request):
+    print("you here")
+    print(request.session['user_id'])
+    return HttpResponse("You have been redirected")
