@@ -100,11 +100,20 @@ class User(AbstractBaseUser):
 class Module(models.Model):
     name = models.CharField(max_length=255, unique=True)
     description = models.CharField(max_length=255, blank=True, null=True)
-    
+
     def __str__(self):
         return self.name
 
-class Membership(models.Model):
+class Coursework(models.Model):
+    title = models.CharField(max_length=255, unique=True)
+    start = models.CharField(max_length=255, default="unspecified")
+    end = models.CharField(max_length=255, default="unspecified")
+    module = models.ForeignKey(Module, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return "%s %s"  % (self.module, self.title)
+
+class UserModuleMembership(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     module = models.ForeignKey(Module, on_delete=models.CASCADE)
     def __str__(self):
