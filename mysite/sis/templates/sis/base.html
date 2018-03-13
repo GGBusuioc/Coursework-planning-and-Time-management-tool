@@ -28,18 +28,25 @@
 
 
       {% if request.session.logged_in == 'logged_in' %}
-
       <li class="nav-item">
         <a class="nav-link" href="{% url 'sis:logout_user' %}">Logout</a>
       </li>
       {% endif %}
 
       {% if request.session.permission == 'staff' %}
-
       <li class="nav-item">
         <a class="nav-link" href="{% url 'sis:create_module' %}">Add a Module</a>
       </li>
       {% endif %}
+
+      {% if request.session.permission == 'student' %}
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'sis:coursework_scheduler' %}">Coursework Scheduler</a>
+      </li>
+      {% endif %}
+
+
+
 
 
 

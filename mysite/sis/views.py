@@ -32,13 +32,16 @@ def login_user(request):
                 login(request, user)
                 request.session['user_id'] = user.id
                 if user.is_student:
+                    request.session['permission'] = 'student'
+                    request.session['logged_in'] = 'logged_in'
+                    return HttpResponseRedirect('/student_redirect/')
+
                     return render(request, 'sis/student_home.html', {'var': 'var'})
                 elif user.is_professor:
                     return render(request, 'sis/professor_home.html')
                 elif user.is_staff:
                     request.session['permission'] = 'staff'
                     request.session['logged_in'] = 'logged_in'
-                    # print(request.session['permission'])
                     return HttpResponseRedirect('/staff_redirect/')
             else:
                 return render(request, {'error_message':'Invalid login'})
@@ -63,20 +66,25 @@ def create_module(request):
     if not request.user.is_staff:
         return HttpResponseRedirect('/login_user/')
 
-
-
     form = ModuleForm(request.POST or None)
     if form.is_valid():
         name = request.POST['name']
         description = request.POST['description']
 
         Module.objects.create(name=name, description=description)
-
-
     return render(request,'sis/create_module.html')
+
+
+
+def coursework_scheduler(request):
+    return render(request, 'sis/coursework_scheduler.html')
+
+
 
 def staff_redirect(request):
     return render(request, 'sis/staff_home.html')
+
+
 
 
 def professor_redirect(request):
@@ -84,4 +92,4 @@ def professor_redirect(request):
 
 
 def student_redirect(request):
-    return HttpResponse("You have been redirected to student view")
+    return render(request, 'sis/student_home.html')

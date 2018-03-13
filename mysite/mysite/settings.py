@@ -38,7 +38,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
 ]
+
+# STATICFILE_DIRS = [
+#     os.path.join(BASE_DIR, "static"),
+#     '/mnt/c/Users/Gabriel/Desktop/Uni/Project/fullcalendar',
+# ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
