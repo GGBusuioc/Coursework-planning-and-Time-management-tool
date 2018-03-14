@@ -95,7 +95,6 @@ def coursework_scheduler(request):
             coursework_payload['title'] = coursework.title
             coursework_payload['start'] = coursework.start
             coursework_payload['end'] = coursework.end
-            print(coursework.module)
             module = Module.objects.get(name = coursework.module)
             coursework_payload['module_id'] = module.id
             coursework_list.append(coursework_payload)
@@ -120,4 +119,9 @@ def student_redirect(request):
 
 
 def coursework_details(request, module_id, coursework_id):
-    return HttpResponse("%d %d" % (module_id, coursework_id))
+    # search for the coursework
+    coursework = Coursework.objects.get(id=coursework_id)
+
+    # get its specifications
+    print("here should be the coursework specifications")
+    return render(request, 'sis/coursework_details.html', {'module_id' : module_id, 'coursework_id' : coursework_id, 'coursework_details': coursework.description, 'coursework_title':coursework.title})
