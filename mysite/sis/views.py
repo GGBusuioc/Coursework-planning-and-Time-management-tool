@@ -86,6 +86,7 @@ def coursework_scheduler(request):
         courseworks = Coursework.objects.filter(module__id = module.module_id )
         coursework_objects.append(courseworks)
 
+
     coursework_list = []
     for an_object in coursework_objects:
         for coursework in an_object:
@@ -94,7 +95,12 @@ def coursework_scheduler(request):
             coursework_payload['title'] = coursework.title
             coursework_payload['start'] = coursework.start
             coursework_payload['end'] = coursework.end
+            print(coursework.module)
+            module = Module.objects.get(name = coursework.module)
+            coursework_payload['module_id'] = module.id
             coursework_list.append(coursework_payload)
+
+
     return render(request, 'sis/coursework_scheduler.html', {'coursework_list' : coursework_list})
 
 
