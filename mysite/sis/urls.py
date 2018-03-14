@@ -13,6 +13,7 @@ urlpatterns = [
     path('coursework_scheduler/', views.coursework_scheduler, name="coursework_scheduler"),
 
     path('create_module/', views.create_module, name="create_module"),
+    path('coursework_details/<int:module_id>/<int:coursework_id>/', views.coursework_details, name='coursework_details'),
 
 
 ]

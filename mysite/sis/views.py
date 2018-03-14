@@ -79,30 +79,23 @@ def create_module(request):
 
 
 def coursework_scheduler(request):
-    print(request.session['user_id'])
-    user_object = User.objects.get(id=request.session['user_id'])
-    print(user_object)
-    modules = UserModuleMembership.objects.get(user=user_object)
+    modules = UserModuleMembership.objects.filter(user__id=request.session['user_id'])
     print("These are the modules that the student is enrolled into")
-    print(modules)
-    module_name = modules.module
-    module_object = Module.objects.get(name=module_name)
-    courseworks = Coursework.objects.filter(module = module_object )
-
-    print("The courseworks")
-    for coursework in courseworks:
-        print(coursework)
+    coursework_objects = []
+    for module in modules:
+        courseworks = Coursework.objects.filter(module__id = module.module_id )
+        coursework_objects.append(courseworks)
 
     coursework_list = []
-    coursework_payload = {}
-    coursework_payload['title'] = coursework.title
-    coursework_payload['start'] = coursework.start
-    coursework_payload['end'] = coursework.end
-    print(coursework_payload)
-    coursework_list.append(coursework_payload)
-    print(coursework_list)
-    request.session['coursework_payload'] = coursework_payload
-    return render(request, 'sis/coursework_scheduler.html', )
+    for an_object in coursework_objects:
+        for coursework in an_object:
+            coursework_payload = {}
+            coursework_payload['id'] = coursework.id
+            coursework_payload['title'] = coursework.title
+            coursework_payload['start'] = coursework.start
+            coursework_payload['end'] = coursework.end
+            coursework_list.append(coursework_payload)
+    return render(request, 'sis/coursework_scheduler.html', {'coursework_list' : coursework_list})
 
 
 
@@ -118,3 +111,7 @@ def professor_redirect(request):
 
 def student_redirect(request):
     return render(request, 'sis/student_home.html')
+
+
+def coursework_details(request, module_id, coursework_id):
+    return HttpResponse("%d %d" % (module_id, coursework_id))
