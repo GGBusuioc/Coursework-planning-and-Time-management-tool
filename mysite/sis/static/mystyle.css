@@ -1,0 +1,10 @@
+p {
+  text-align: center;
+  color: black;
+}
+
+.center-div
+{
+     margin: 0 auto;
+     width: 400px;
+}

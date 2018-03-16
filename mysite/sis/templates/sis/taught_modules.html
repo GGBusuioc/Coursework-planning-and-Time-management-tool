@@ -1,0 +1,12 @@
+{% extends 'sis/base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1><p class="text-center">These are the modules that you are curently teaching:</p></h1>
+    {% for module in modules_list %}
+      <h2><p class="text-center">{{module}}</p><h2>
+    {% endfor %}
+
+</div>
+
+{% endblock %}

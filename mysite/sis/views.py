@@ -19,17 +19,23 @@ from django.template.response import TemplateResponse
 from .forms import *
 import json
 
+from django.contrib import messages
+
 
 @csrf_exempt
 def login_user(request):
     if request.method == "POST":
-        email = request.POST['email']
-        password = request.POST['password']
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
         user = authenticate(email=email, password=password)
+
+
 
 
         if user is not None:
             if user.is_active:
+
                 login(request, user)
                 request.session['user_id'] = user.id
                 request.session['user_email'] = user.email
@@ -38,15 +44,31 @@ def login_user(request):
                     request.session['logged_in'] = 'logged_in'
                     return HttpResponseRedirect('/student_redirect/')
 
-                    return render(request, 'sis/student_home.html', {'var': 'var'})
                 elif user.is_professor:
-                    return render(request, 'sis/professor_home.html')
+                    request.session['permission'] = 'professor'
+                    request.session['logged_in'] = 'logged_in'
+
+                    return HttpResponseRedirect('/professor_redirect/')
                 elif user.is_staff:
+
                     request.session['permission'] = 'staff'
                     request.session['logged_in'] = 'logged_in'
                     return HttpResponseRedirect('/staff_redirect/')
             else:
                 return render(request, {'error_message':'Invalid login'})
+        else:
+            # if there is no user with that Email
+            user_object = User.objects.filter(email=email)
+            if user_object:
+                messages.error(request, 'Wrong password input!')
+
+            else:
+                messages.error(request, 'Wrong email input!')
+
+
+
+
+
     return render(request, 'sis/login.html')
 
 
@@ -62,29 +84,19 @@ def index(request):
     return render(request, 'sis/index.html')
 
 
-#@login_required
-def create_module(request):
-    print(request.user)
-    if not request.user.is_staff:
-        return HttpResponseRedirect('/login_user/')
-
-    form = ModuleForm(request.POST or None)
-    if form.is_valid():
-        name = request.POST['name']
-        description = request.POST['description']
-
-        Module.objects.create(name=name, description=description)
-    return render(request,'sis/create_module.html')
 
 
 
 def coursework_scheduler(request):
     modules = UserModuleMembership.objects.filter(user__id=request.session['user_id'])
-    print("These are the modules that the student is enrolled into")
+
+    modules_list = []
+
     coursework_objects = []
     for module in modules:
         courseworks = Coursework.objects.filter(module__id = module.module_id )
         coursework_objects.append(courseworks)
+        modules_list.append(str(module.module))
 
 
     coursework_list = []
@@ -95,23 +107,24 @@ def coursework_scheduler(request):
             coursework_payload['title'] = coursework.title
             coursework_payload['start'] = coursework.start
             coursework_payload['end'] = coursework.end
+            coursework_payload['percentage'] = coursework.percentage
+
             module = Module.objects.get(name = coursework.module)
             coursework_payload['module_id'] = module.id
+            coursework_payload['module_name'] = module.name
+            print(coursework_payload)
             coursework_list.append(coursework_payload)
 
 
-    return render(request, 'sis/coursework_scheduler.html', {'coursework_list' : coursework_list})
+    return render(request, 'sis/coursework_scheduler.html', {'coursework_list' : coursework_list, 'modules_list' : modules_list})
 
 
 
 def staff_redirect(request):
     return render(request, 'sis/staff_home.html')
 
-
-
-
 def professor_redirect(request):
-    return HttpResponse("You have been redirected to professor view")
+    return render(request, 'sis/professor_home.html')
 
 
 def student_redirect(request):
@@ -125,3 +138,50 @@ def coursework_details(request, module_id, coursework_id):
     # get its specifications
     print("here should be the coursework specifications")
     return render(request, 'sis/coursework_details.html', {'module_id' : module_id, 'coursework_id' : coursework_id, 'coursework_details': coursework.description, 'coursework_title':coursework.title})
+
+def taught_modules(request):
+    modules = UserModuleMembership.objects.filter(user__id=request.session['user_id'])
+    modules_list = []
+    for module in modules:
+        modules_list.append(str(module.module))
+    print(modules_list)
+    return render(request, 'sis/taught_modules.html', {'modules_list': modules_list})
+
+
+def create_module(request):
+    if not request.user.is_staff:
+        return HttpResponseRedirect('/login_user/')
+
+    form = ModuleForm(request.POST or None)
+    print(form.is_valid())
+
+    if form.is_valid():
+        name = request.POST['name']
+        description = request.POST['description']
+
+        Module.objects.create(name=name, description=description)
+    return render(request,'sis/create_module.html')
+
+
+
+
+def create_coursework(request):
+    if not request.user.is_professor:
+        return HttpResponseRedirect('/login_user/')
+
+    form = CourseworkForm(request.POST or None)
+
+    # print(form.errors.as_data())
+    # print(form.is_valid())
+    if form.is_valid():
+
+        module = Module.objects.get(name=request.POST['module'])
+        title = request.POST['title']
+        description = request.POST['description']
+        start = request.POST['start']
+        end = request.POST['end']
+        percentage = request.POST['percentage']
+
+        Coursework.objects.create(title=title, description=description, start=start, end=end, module=module, percentage=percentage)
+
+    return render(request,'sis/create_coursework.html')

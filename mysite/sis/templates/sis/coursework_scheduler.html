@@ -23,8 +23,8 @@
       customButtons: {
         myCustomButton: {
           text: 'custom!',
-          click: function() {
-            alert('clicked the custom button!');
+          click: function(event) {
+            event.color = 'blue';
           }
         }
       },
@@ -42,13 +42,24 @@
         },
 
 
+
+
+
       events: [
       {% for dict in coursework_list %}
          {
-           title  :   '{{dict.title}}',
+           title  :   '{{dict.module_name}} - {{dict.title}}',
            start  :   '{{dict.start}}',
            end    :   '{{dict.end}}',
-           color  : 'green',
+           {% if dict.percentage <= 10 %}
+            color  : 'green',
+          {% elif dict.percentage <= 20%}
+            color  : 'blue',
+          {% else %}
+            color  : 'red',
+
+
+           {% endif %}
            url: 'http://localhost:8000/coursework_details/{{dict.module_id}}/{{dict.id}}/'
          },
       {% endfor %}
@@ -69,8 +80,25 @@
 
   {% block content %}
   <br>
-  <div class="container">
-    <div id='calendar'></div>
-    <button id='my-next-button'>Next</button>
+
+
+  <div class="row">
+    <div class="col-8">
+      <div class="container" id='calendar'></div>
+      <button id='my-next-button'>Next</button>
+    </div>
+      <div class="col-4 ">
+          <div class="col-xs-4 text-center">
+
+              <div class="col">  <h1>Your modules:<h1></div>
+               <div class="w-100"></div>
+               <div class="col">{% for module in modules_list %}
+                 <h3>{{module}}</h3>
+               {% endfor %}</div>
+          </div>
+          
+        </div>
+      </div>
   </div>
+
   {% endblock %}

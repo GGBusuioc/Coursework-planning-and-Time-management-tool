@@ -16,6 +16,12 @@ class ModuleForm(forms.ModelForm):
         model = Module
         fields = ['name', 'description']
 
+class CourseworkForm(forms.ModelForm):
+    class Meta:
+        model = Coursework
+        fields = ['title', 'description', 'start', 'end', 'percentage']
+        exclude = ("module",)
+
 class UserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
     # information about the class

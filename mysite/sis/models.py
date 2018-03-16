@@ -100,15 +100,18 @@ class User(AbstractBaseUser):
 class Module(models.Model):
     name = models.CharField(max_length=255, unique=True)
     description = models.CharField(max_length=255, blank=True, null=True)
-
+    credits = models.IntegerField(default=10)
     def __str__(self):
         return self.name
+
+
 
 class Coursework(models.Model):
     title = models.CharField(max_length=255, unique=True)
     start = models.CharField(max_length=255, default="unspecified")
     end = models.CharField(max_length=255, default="unspecified")
     description =  models.TextField(blank=True, null=True)
+    percentage = models.IntegerField(blank=True, null=True)
     module = models.ForeignKey(Module, on_delete=models.CASCADE)
 
     def __str__(self):

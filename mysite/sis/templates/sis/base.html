@@ -5,7 +5,9 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
   <link href='https://fonts.googleapis.com/css?family=Satisfy' rel='stylesheet' type='text/css'>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+  {% load static %}
+  <link rel='stylesheet' type="text/css" href={% static 'mystyle.css' %} />
+
   {% block script %} {% endblock %}
 </head>
 <body>
@@ -16,7 +18,13 @@
     <span class="navbar-toggler-icon"></span>
   </button>
   <div class="container">
-  <a class="navbar-brand" href="#">Navbar</a>
+  {% if request.session.logged_in == 'logged_in' %}
+
+  <a class="navbar-brand" href="/{{request.session.permission}}_redirect/">SIS</a>
+  {% else %}
+  <a class="navbar-brand" href="#">SIS</a>
+
+  {% endif %}
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav">
 
@@ -45,6 +53,14 @@
       </li>
       {% endif %}
 
+      {% if request.session.permission == 'professor' %}
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'sis:taught_modules' %}">Taught Modules</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'sis:create_coursework' %}">Create Coursework</a>
+      </li>
+      {% endif %}
 
 
 
