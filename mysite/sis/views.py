@@ -140,6 +140,9 @@ def coursework_details(request, module_id, coursework_id):
     return render(request, 'sis/coursework_details.html', {'module_id' : module_id, 'coursework_id' : coursework_id, 'coursework_details': coursework.description, 'coursework_title':coursework.title})
 
 def taught_modules(request):
+    if not request.user.is_professor:
+        return HttpResponseRedirect('/login_user/')
+
     modules = UserModuleMembership.objects.filter(user__id=request.session['user_id'])
     modules_list = []
     for module in modules:
@@ -164,7 +167,6 @@ def create_module(request):
 
 
 
-
 def create_coursework(request):
     if not request.user.is_professor:
         return HttpResponseRedirect('/login_user/')
@@ -185,3 +187,24 @@ def create_coursework(request):
         Coursework.objects.create(title=title, description=description, start=start, end=end, module=module, percentage=percentage)
 
     return render(request,'sis/create_coursework.html')
+
+
+def display_users(request):
+    if not request.user.is_staff:
+        return HttpResponseRedirect('/login_user/')
+    users = User.objects.all()
+
+    user_list = []
+    for user in users:
+        user_dict = {}
+        user_dict['id'] = user.id
+        user_dict['email'] = user.email
+        user_dict['is_student'] = user.is_student
+        user_dict['is_professor'] = user.is_professor
+        user_dict['is_staff'] = user.is_staff
+        user_list.append(user_dict)
+
+
+    print(user_list)
+
+    return render(request,'sis/display_users.html', {'user_list':user_list})

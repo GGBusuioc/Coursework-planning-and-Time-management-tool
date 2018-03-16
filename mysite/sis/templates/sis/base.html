@@ -20,31 +20,26 @@
   <div class="container">
   {% if request.session.logged_in == 'logged_in' %}
 
-  <a class="navbar-brand" href="/{{request.session.permission}}_redirect/">SIS</a>
+  <a class="navbar-brand" href="/{{request.session.permission}}_redirect/"><strong>SIS</strong></a>
   {% else %}
-  <a class="navbar-brand" href="#">SIS</a>
+  <a class="navbar-brand" href="{% url 'sis:index' %}" >SIS</a>
 
   {% endif %}
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav">
 
-      {% if request.session.logged_in != "logged_in" %}
-      <li class="">
-        <a class="nav-link" href="{% url 'sis:login_user' %}">Login</a>
-      </li>
-      {% endif %}
 
-
-      {% if request.session.logged_in == 'logged_in' %}
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'sis:logout_user' %}">Logout</a>
-      </li>
-      {% endif %}
 
       {% if request.session.permission == 'staff' %}
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'sis:create_module' %}">Add a Module</a>
+        <a src={% static 'plus-sign.png' %} class="nav-link" href="{% url 'sis:create_module' %}"><img src={% static 'plus-sign.png' %} alt="Plus Sign"><strong> Add module</strong>
+</a>
+
       </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'sis:display_users' %}"><img src={% static 'user-asterisk.png' %} alt="User-asterisk Sign"><strong> Display users</strong></a>
+      </li>
+
       {% endif %}
 
       {% if request.session.permission == 'student' %}
@@ -62,9 +57,20 @@
       </li>
       {% endif %}
 
+    </ul>
+    <ul class="navbar-nav ml-auto">
 
+      {% if request.session.logged_in != "logged_in" %}
+      <li class="">
+        <a class="nav-link" href="{% url 'sis:login_user' %}"><strong>Log in </strong><img src={% static 'log-in.png' %} alt="Log in Sign"></a></a>
+      </li>
+      {% endif %}
 
-
+      {% if request.session.logged_in == 'logged_in' %}
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'sis:logout_user' %}"><strong>Logout </strong><img src={% static 'log-out.png' %} alt="Log out SIgn"></a>
+      </li>
+      {% endif %}
 
     </ul>
   </div>

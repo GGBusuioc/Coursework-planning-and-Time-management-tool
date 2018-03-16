@@ -1,0 +1,60 @@
+{% extends 'sis/base.html' %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+  <div class="row">
+
+
+                <table class="table table-striped">
+                  <thead class="thead-dark">
+                    <tr>
+                      <th scope="col">Email</th>
+                      <th scope="col">Student</th>
+                      <th scope="col">Professor</th>
+                      <th scope="col">Staff</th>
+                    </tr>
+                    <tbody>
+                      {% load static %}
+
+                      {% for user in user_list %}
+                      <tr>
+                        <th scope="row">{{user.email}}</th>
+                        <td>
+                          {% if user.is_student %}
+                          <img src={% static 'ok-sign.png' %} alt="OK Sign">
+                          {% else %}
+                          <img src={% static 'not-sign.png' %} alt="NOT Sign">
+                          {% endif %}
+                        </td>
+                        <td>
+                          {% if user.is_professor %}
+                          <img src={% static 'ok-sign.png' %} alt="OK Sign">
+                          {% else %}
+                          <img src={% static 'not-sign.png' %} alt="NOT Sign">
+                          {% endif %}
+                        </td>
+                        <td>
+                          {% if user.is_staff %}
+                          <img src={% static 'ok-sign.png' %} alt="OK Sign">
+                          {% else %}
+                          <img src={% static 'not-sign.png' %} alt="NOT Sign">
+                          {% endif %}
+                        </td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+
+
+
+                  </thead>
+                </table>
+
+
+
+  </div>
+</div>
+
+
+{% endblock %}
