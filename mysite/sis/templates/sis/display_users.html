@@ -23,23 +23,23 @@
                         <th scope="row">{{user.email}}</th>
                         <td>
                           {% if user.is_student %}
-                          <img src={% static 'ok-sign.png' %} alt="OK Sign">
+                          <img src={% static 'images/checked.png' %} alt="Checked icon">
                           {% else %}
-                          <img src={% static 'not-sign.png' %} alt="NOT Sign">
+                          <img src={% static 'images/unchecked.png' %} alt="Unchecked icon">
                           {% endif %}
                         </td>
                         <td>
                           {% if user.is_professor %}
-                          <img src={% static 'ok-sign.png' %} alt="OK Sign">
+                          <img src={% static 'images/checked.png' %} alt="Checked icon">
                           {% else %}
-                          <img src={% static 'not-sign.png' %} alt="NOT Sign">
+                          <img src={% static 'images/unchecked.png' %} alt="Unchecked icon">
                           {% endif %}
                         </td>
                         <td>
                           {% if user.is_staff %}
-                          <img src={% static 'ok-sign.png' %} alt="OK Sign">
+                          <img src={% static 'images/checked.png' %} alt="Checked icon">
                           {% else %}
-                          <img src={% static 'not-sign.png' %} alt="NOT Sign">
+                          <img src={% static 'images/unchecked.png' %} alt="Unchecked icon">
                           {% endif %}
                         </td>
                       </tr>

@@ -39,6 +39,9 @@ def login_user(request):
                 login(request, user)
                 request.session['user_id'] = user.id
                 request.session['user_email'] = user.email
+                request.session['username'] = user.email.split('@')[0]
+                print("this is the username")
+                print(request.session['username'])
                 if user.is_student:
                     request.session['permission'] = 'student'
                     request.session['logged_in'] = 'logged_in'
@@ -176,8 +179,8 @@ def create_coursework(request):
     # print(form.errors.as_data())
     # print(form.is_valid())
     if form.is_valid():
-
-        module = Module.objects.get(name=request.POST['module'])
+        print(request.POST['module'])
+        module = Module.objects.get(id=request.POST['module'])
         title = request.POST['title']
         description = request.POST['description']
         start = request.POST['start']
@@ -186,7 +189,7 @@ def create_coursework(request):
 
         Coursework.objects.create(title=title, description=description, start=start, end=end, module=module, percentage=percentage)
 
-    return render(request,'sis/create_coursework.html')
+    return render(request,'sis/create_coursework.html', {'form':form})
 
 
 def display_users(request):

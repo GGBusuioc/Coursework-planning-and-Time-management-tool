@@ -20,7 +20,7 @@
   <div class="container">
   {% if request.session.logged_in == 'logged_in' %}
 
-  <a class="navbar-brand" href="/{{request.session.permission}}_redirect/"><strong>SIS</strong></a>
+  <a class="navbar-brand" href="/{{request.session.permission}}_redirect/"><img src={% static 'images/user.png' %} alt="Plus Sign"><strong> {{request.session.username}}</strong></a>
   {% else %}
   <a class="navbar-brand" href="{% url 'sis:index' %}" >SIS</a>
 
@@ -32,12 +32,12 @@
 
       {% if request.session.permission == 'staff' %}
       <li class="nav-item">
-        <a src={% static 'plus-sign.png' %} class="nav-link" href="{% url 'sis:create_module' %}"><img src={% static 'plus-sign.png' %} alt="Plus Sign"><strong> Add module</strong>
+        <a class="nav-link" href="{% url 'sis:create_module' %}"><img src={% static 'images/plus-sign.png' %} alt="Plus Sign"><strong> Add module</strong>
 </a>
 
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'sis:display_users' %}"><img src={% static 'user-asterisk.png' %} alt="User-asterisk Sign"><strong> Display users</strong></a>
+        <a class="nav-link" href="{% url 'sis:display_users' %}"><img src={% static 'images/family.png' %} alt="Display users Sign"><strong> Display users</strong></a>
       </li>
 
       {% endif %}
@@ -50,10 +50,10 @@
 
       {% if request.session.permission == 'professor' %}
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'sis:taught_modules' %}">Taught Modules</a>
+        <a class="nav-link" href="{% url 'sis:taught_modules' %}"><img src={% static 'images/lightbulb.png' %} alt="Lightbulb image"><strong> Taught modules</strong></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'sis:create_coursework' %}">Create Coursework</a>
+        <a class="nav-link" href="{% url 'sis:create_coursework' %}"><img src={% static 'images/plus-sign.png' %} alt="Plus Sign"><strong> Create coursework</strong></a>
       </li>
       {% endif %}
 
@@ -62,13 +62,13 @@
 
       {% if request.session.logged_in != "logged_in" %}
       <li class="">
-        <a class="nav-link" href="{% url 'sis:login_user' %}"><strong>Log in </strong><img src={% static 'log-in.png' %} alt="Log in Sign"></a></a>
+        <a class="nav-link" href="{% url 'sis:login_user' %}"><strong>Log in </strong><img src={% static 'images/log-in.png' %} alt="Log in Sign"></a></a>
       </li>
       {% endif %}
 
       {% if request.session.logged_in == 'logged_in' %}
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'sis:logout_user' %}"><strong>Logout </strong><img src={% static 'log-out.png' %} alt="Log out SIgn"></a>
+        <a class="nav-link" href="{% url 'sis:logout_user' %}"><strong>Logout </strong><img src={% static 'images/log-out.png' %} alt="Log out SIgn"></a>
       </li>
       {% endif %}
 

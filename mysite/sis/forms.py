@@ -9,6 +9,8 @@ from .models import *
 User = get_user_model()
 
 
+class DateInput(forms.DateInput):
+    input_type = 'date'
 
 
 class ModuleForm(forms.ModelForm):
@@ -19,8 +21,12 @@ class ModuleForm(forms.ModelForm):
 class CourseworkForm(forms.ModelForm):
     class Meta:
         model = Coursework
-        fields = ['title', 'description', 'start', 'end', 'percentage']
-        exclude = ("module",)
+        fields = ['title', 'description', 'start', 'end', 'percentage', 'module']
+        # exclude = ("module",)
+        widgets = {
+        'start' : DateInput(),
+        'end' : DateInput(),
+        }
 
 class UserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)

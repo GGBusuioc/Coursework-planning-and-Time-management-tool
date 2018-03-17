@@ -108,8 +108,10 @@ class Module(models.Model):
 
 class Coursework(models.Model):
     title = models.CharField(max_length=255, unique=True)
-    start = models.CharField(max_length=255, default="unspecified")
-    end = models.CharField(max_length=255, default="unspecified")
+    # start = models.CharField(max_length=255, default="unspecified")
+    # end = models.CharField(max_length=255, default="unspecified")
+    start = models.DateField()
+    end = models.DateField()
     description =  models.TextField(blank=True, null=True)
     percentage = models.IntegerField(blank=True, null=True)
     module = models.ForeignKey(Module, on_delete=models.CASCADE)
