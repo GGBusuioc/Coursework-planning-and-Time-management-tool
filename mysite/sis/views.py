@@ -94,12 +94,15 @@ def coursework_scheduler(request):
     modules = UserModuleMembership.objects.filter(user__id=request.session['user_id'])
 
     modules_list = []
+    graphdata_list = []
+    graphlabel_list = []
 
     coursework_objects = []
     for module in modules:
         courseworks = Coursework.objects.filter(module__id = module.module_id )
         coursework_objects.append(courseworks)
         modules_list.append(str(module.module))
+        # graphdata_list.append(module.credits)
 
 
     coursework_list = []
@@ -111,15 +114,20 @@ def coursework_scheduler(request):
             coursework_payload['start'] = coursework.start
             coursework_payload['end'] = coursework.end
             coursework_payload['percentage'] = coursework.percentage
-
             module = Module.objects.get(name = coursework.module)
             coursework_payload['module_id'] = module.id
             coursework_payload['module_name'] = module.name
-            print(coursework_payload)
+            graphdata_list.append(module.credits/(100/coursework.percentage))
+            graphlabel_list.append(coursework.title)
+            #print(coursework_payload)
             coursework_list.append(coursework_payload)
+    print(graphlabel_list)
 
 
-    return render(request, 'sis/coursework_scheduler.html', {'coursework_list' : coursework_list, 'modules_list' : modules_list})
+
+
+
+    return render(request, 'sis/coursework_scheduler.html', {'coursework_list' : coursework_list, 'modules_list' : modules_list , 'graphdata_list':graphdata_list, 'graphlabel_list':graphlabel_list}, )
 
 
 
