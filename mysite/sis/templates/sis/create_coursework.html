@@ -3,11 +3,17 @@
 {% block content %}
 
 
-<form action="" method="post">{% csrf_token %}
-    {{ form }}
-    <input type="submit" value="Create" />
-</form>
+<form class="" action="{% url 'sis:create_coursework'%}" method="post">
+  {% if error_message %}
+      <p><strong>{{ error_message }}</strong></p>
+  {% endif %}
 
+
+  {% csrf_token %}
+  {% include 'sis/form_template.html' %}
+    <input type="submit" name="submit" value="Submit" />
+
+</form>
 
 
 {% endblock %}

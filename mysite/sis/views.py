@@ -163,6 +163,7 @@ def taught_modules(request):
 
 
 def create_module(request):
+
     if not request.user.is_staff:
         return HttpResponseRedirect('/login_user/')
 
@@ -174,20 +175,23 @@ def create_module(request):
         description = request.POST['description']
 
         Module.objects.create(name=name, description=description)
-    return render(request,'sis/create_module.html')
+    return render(request,'sis/create_module.html', {'form':form})
 
 
 
 def create_coursework(request):
+
     if not request.user.is_professor:
         return HttpResponseRedirect('/login_user/')
+    print("request user before form")
 
-    form = CourseworkForm(request.POST or None)
+    form = CourseworkForm(request.POST, user=request.user)
+    print("AAAA")
 
+    print(form.is_valid())
     # print(form.errors.as_data())
     # print(form.is_valid())
     if form.is_valid():
-        print(request.POST['module'])
         module = Module.objects.get(id=request.POST['module'])
         title = request.POST['title']
         description = request.POST['description']

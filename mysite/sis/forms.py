@@ -27,11 +27,30 @@ class CourseworkForm(forms.ModelForm):
         'start' : DateInput(),
         'end' : DateInput(),
         }
+    def __init__(self,  *args, user=None, **kwargs ):
+        super(CourseworkForm, self).__init__(*args,**kwargs)
+
+        if user:
+            modules = UserModuleMembership.objects.filter(user=user)
+            qr = Module.objects.none()
+
+            for module in modules:
+                print(module.module)
+                qr =  qr | Module.objects.filter(name=module.module)
+            self.fields['module'].queryset = qr
+
 
 class UserModuleForm(forms.ModelForm):
     class Meta:
         model = UserModuleMembership
         fields = ['user','module']
+
+    def __init__(self,  *args, **kwargs ):
+        super(UserModuleForm, self).__init__(*args,**kwargs)
+
+
+
+        self.fields['user'].queryset = User.objects.filter(student=True)
 
 
 
