@@ -124,3 +124,7 @@ class UserModuleMembership(models.Model):
     module = models.ForeignKey(Module, on_delete=models.CASCADE)
     def __str__(self):
         return ("%s %s" % (self.user, self.module))
+
+    class Meta:
+        unique_together = ("user", "module")
+        index_together = ["user", "module"]

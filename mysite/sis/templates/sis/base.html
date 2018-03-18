@@ -32,12 +32,13 @@
 
       {% if request.session.permission == 'staff' %}
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'sis:create_module' %}"><img src={% static 'images/plus-sign.png' %} alt="Plus Sign"><strong> Add module</strong>
-</a>
-
+        <a class="nav-link" href="{% url 'sis:create_module' %}"><img src={% static 'images/plus-sign.png' %} alt="Plus Sign"><strong> Add module</strong></a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="{% url 'sis:display_users' %}"><img src={% static 'images/family.png' %} alt="Display users Sign"><strong> Display users</strong></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'sis:enroll_module' %}"><img src={% static 'images/plus-sign.png' %} alt="Plus Sign"><strong> Enroll</strong></a>
       </li>
 
       {% endif %}

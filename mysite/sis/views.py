@@ -207,7 +207,20 @@ def display_users(request):
         user_dict['is_staff'] = user.is_staff
         user_list.append(user_dict)
 
-
-    print(user_list)
-
     return render(request,'sis/display_users.html', {'user_list':user_list})
+
+def enroll_module(request):
+    if not request.user.is_staff:
+        return HttpResponseRedirect('/login_user/')
+
+    students = User.objects.filter(student=True)
+    print(students)
+    form = UserModuleForm(request.POST or None)
+    print(form.is_valid())
+    if form.is_valid():
+        user = User.objects.get(id=request.POST['user'])
+        module = Module.objects.get(id=request.POST['module'])
+
+        UserModuleMembership.objects.create(user=user, module=module)
+
+    return render(request,'sis/enroll_module.html', {'form':form, 'students':students})

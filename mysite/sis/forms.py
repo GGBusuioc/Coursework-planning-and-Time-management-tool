@@ -28,6 +28,13 @@ class CourseworkForm(forms.ModelForm):
         'end' : DateInput(),
         }
 
+class UserModuleForm(forms.ModelForm):
+    class Meta:
+        model = UserModuleMembership
+        fields = ['user','module']
+
+
+
 class UserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
     # information about the class
