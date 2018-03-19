@@ -3,21 +3,35 @@
 {% block content %}
 
 
-<form class="" action="{% url 'sis:create_module'%}" method="post">
-  {% if error_message %}
-      <p><strong>{{ error_message }}</strong></p>
-  {% endif %}
+{% load widget_tweaks %}
 
-
+<form method="post" novalidate>
   {% csrf_token %}
-  {% include 'sis/form_template.html' %}
-    <input type="submit" name="submit" value="Submit" />
 
+  {% for field in form.visible_fields %}
+    <div class="form-group">
+      {{ field.label_tag }}
+
+      {% if form.is_bound %}
+        {% if field.errors %}
+          {% render_field field class="form-control is-invalid" %}
+          {% for error in field.errors %}
+            <div class="invalid-feedback">
+              {{ error }}
+            </div>
+          {% endfor %}
+        {% else %}
+          {% render_field field class="form-control is-valid" %}
+        {% endif %}
+      {% else %}
+        {% render_field field class="form-control" %}
+      {% endif %}
+
+    </div>
+  {% endfor %}
+
+  <button type="submit" class="btn btn-primary">Submit</button>
 </form>
-
-
-
-
 
 
 {% endblock %}

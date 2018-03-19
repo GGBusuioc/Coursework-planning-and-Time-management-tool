@@ -99,7 +99,7 @@ class User(AbstractBaseUser):
 
 class Module(models.Model):
     name = models.CharField(max_length=255, unique=True)
-    description = models.CharField(max_length=255, blank=True, null=True)
+    description = models.TextField(max_length=255, default="")
     credits = models.IntegerField(default=10)
     def __str__(self):
         return self.name

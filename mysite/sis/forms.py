@@ -47,10 +47,20 @@ class UserModuleForm(forms.ModelForm):
 
     def __init__(self,  *args, **kwargs ):
         super(UserModuleForm, self).__init__(*args,**kwargs)
-
-
-
         self.fields['user'].queryset = User.objects.filter(student=True)
+
+class AssignModuleForm(forms.ModelForm):
+    class Meta:
+        model = UserModuleMembership
+        fields = ['user','module']
+
+    def __init__(self,  *args, **kwargs ):
+        super(AssignModuleForm, self).__init__(*args,**kwargs)
+        self.fields['user'].queryset = User.objects.filter(professor=True)
+
+
+
+
 
 
 

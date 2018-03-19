@@ -225,8 +225,7 @@ def enroll_module(request):
     if not request.user.is_staff:
         return HttpResponseRedirect('/login_user/')
 
-    students = User.objects.filter(student=True)
-    print(students)
+
     form = UserModuleForm(request.POST or None)
     print(form.is_valid())
     if form.is_valid():
@@ -235,4 +234,18 @@ def enroll_module(request):
 
         UserModuleMembership.objects.create(user=user, module=module)
 
-    return render(request,'sis/enroll_module.html', {'form':form, 'students':students})
+    return render(request,'sis/enroll_module.html', {'form':form })
+
+def assign_module(request):
+    if not request.user.is_staff:
+        return HttpResponseRedirect('/login_user/')
+
+    form = AssignModuleForm(request.POST or None)
+    if form.is_valid():
+        user = User.objects.get(id=request.POST['user'])
+        module = Module.objects.get(id=request.POST['module'])
+
+        UserModuleMembership.objects.create(user=user, module=module)
+
+
+    return render(request,'sis/assign_module.html', {'form':form })

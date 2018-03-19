@@ -2,9 +2,16 @@
 <html lang="en">
 <head>
   {% block title %}<title>School Information System</title>{% endblock %}
+  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
-  <link href='https://fonts.googleapis.com/css?family=Satisfy' rel='stylesheet' type='text/css'>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+  <link href='https://fonts.googleapis.com/css?family=Satisfy' rel='stylesheet' type='text/css'> -->
+
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
   {% load static %}
   <link rel='stylesheet' type="text/css" href={% static 'mystyle.css' %} />
 
@@ -12,71 +19,53 @@
 </head>
 <body>
 
-  <nav class="navbar navbar-toggleable-md navbar navbar-inverse bg-inverse">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">School Information System</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        {% if request.session.logged_in == 'logged_in' %}
+        <a class="nav-item nav-link active" href="/{{request.session.permission}}_redirect/"><img src={% static 'images/user.png' %} alt="Plus Sign"><strong> {{request.session.username}}</strong></a>
+        {% else %}
+        <a class="nav-item nav-link active" href="{% url 'sis:index' %}" >SIS</a>
+        {% endif %}
 
-  <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="container">
-  {% if request.session.logged_in == 'logged_in' %}
+        {% if request.session.permission == 'staff' %}
+        <a class="nav-item nav-link" href="{% url 'sis:create_module' %}"><img src={% static 'images/plus-sign.png' %} alt="Plus Sign"><strong> Add module</strong></a>
+        <a class="nav-item nav-link" href="{% url 'sis:display_users' %}"><img src={% static 'images/family.png' %} alt="Display users Sign"><strong> Display users</strong></a>
+        <a class="nav-item nav-link" href="{% url 'sis:enroll_module' %}"><img src={% static 'images/plus-sign.png' %} alt="Plus Sign"><strong> Enroll</strong></a>
+        <a class="nav-item nav-link" href="{% url 'sis:assign_module' %}"><img src={% static 'images/plus-sign.png' %} alt="Plus Sign"><strong> Assign module</strong></a>
+        {% endif %}
 
-  <a class="navbar-brand" href="/{{request.session.permission}}_redirect/"><img src={% static 'images/user.png' %} alt="Plus Sign"><strong> {{request.session.username}}</strong></a>
-  {% else %}
-  <a class="navbar-brand" href="{% url 'sis:index' %}" >SIS</a>
+        {% if request.session.permission == 'professor' %}
+        <a class="nav-item nav-link" href="{% url 'sis:create_coursework' %}"><img src={% static 'images/plus-sign.png' %} alt="Plus Sign"><strong> Create coursework</strong></a>
+        <a class="nav-item nav-link" href="{% url 'sis:taught_modules' %}"><img src={% static 'images/lightbulb.png' %} alt="Lightbulb image"><strong> Taught modules</strong></a>
+        {% endif %}
 
-  {% endif %}
-  <div class="collapse navbar-collapse" id="navbarNav">
-    <ul class="navbar-nav">
+        {% if request.session.permission == 'student' %}
+        <a class="nav-item nav-link" href="{% url 'sis:coursework_scheduler' %}"><img src={% static 'images/lightbulb.png' %} alt="Lightbulb image"><strong> Coursework scheduler</strong></a>
+        {% endif %}
+
+
+        {% if request.session.logged_in != 'logged_in' %}
+        <a class="nav-link nav-link" href="{% url 'sis:login_user' %}"><strong>Log in </strong><img src={% static 'images/log-in.png' %} alt="Log in Sign"></a></a>
+        {% endif %}
+
+        {% if request.session.logged_in == 'logged_in' %}
+        <a class="nav-link nav-link" href="{% url 'sis:logout_user' %}"><strong>Logout </strong><img src={% static 'images/log-out.png' %} alt="Log out Sign"></a>
+        {% endif %}
+
+      </div>
+    </div>
+  </nav>
 
 
 
-      {% if request.session.permission == 'staff' %}
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'sis:create_module' %}"><img src={% static 'images/plus-sign.png' %} alt="Plus Sign"><strong> Add module</strong></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'sis:display_users' %}"><img src={% static 'images/family.png' %} alt="Display users Sign"><strong> Display users</strong></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'sis:enroll_module' %}"><img src={% static 'images/plus-sign.png' %} alt="Plus Sign"><strong> Enroll</strong></a>
-      </li>
 
-      {% endif %}
 
-      {% if request.session.permission == 'student' %}
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'sis:coursework_scheduler' %}">Coursework Scheduler</a>
-      </li>
-      {% endif %}
 
-      {% if request.session.permission == 'professor' %}
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'sis:taught_modules' %}"><img src={% static 'images/lightbulb.png' %} alt="Lightbulb image"><strong> Taught modules</strong></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'sis:create_coursework' %}"><img src={% static 'images/plus-sign.png' %} alt="Plus Sign"><strong> Create coursework</strong></a>
-      </li>
-      {% endif %}
-
-    </ul>
-    <ul class="navbar-nav ml-auto">
-
-      {% if request.session.logged_in != "logged_in" %}
-      <li class="">
-        <a class="nav-link" href="{% url 'sis:login_user' %}"><strong>Log in </strong><img src={% static 'images/log-in.png' %} alt="Log in Sign"></a></a>
-      </li>
-      {% endif %}
-
-      {% if request.session.logged_in == 'logged_in' %}
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'sis:logout_user' %}"><strong>Logout </strong><img src={% static 'images/log-out.png' %} alt="Log out SIgn"></a>
-      </li>
-      {% endif %}
-
-    </ul>
-  </div>
-</div>
-</nav>
 <div class="container-fluid">
 
   {% block content %}

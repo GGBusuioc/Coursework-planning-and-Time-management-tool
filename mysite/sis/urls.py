@@ -20,6 +20,9 @@ urlpatterns = [
     path('coursework_details/<int:module_id>/<int:coursework_id>/', views.coursework_details, name='coursework_details'),
 
     path('enroll_module/', views.enroll_module, name="enroll_module"),
+    path('assign_module/', views.assign_module, name="assign_module"),
+
+
 
 
 
