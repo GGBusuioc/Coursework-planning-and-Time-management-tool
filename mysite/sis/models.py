@@ -97,14 +97,15 @@ class User(AbstractBaseUser):
         return self.active
 
 
+
+
+
 class Module(models.Model):
     name = models.CharField(max_length=255, unique=True)
     description = models.TextField(max_length=255, default="")
     credits = models.IntegerField(default=10)
     def __str__(self):
         return self.name
-
-
 
 class Coursework(models.Model):
     title = models.CharField(max_length=255, unique=True)
@@ -128,3 +129,12 @@ class UserModuleMembership(models.Model):
     class Meta:
         unique_together = ("user", "module")
         index_together = ["user", "module"]
+
+class UserCourseworkMembership(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    coursework = models.ForeignKey(Coursework, default="", on_delete=models.CASCADE)
+    progress = models.IntegerField(default=0)
+    completed = models.BooleanField(default=False)
+    priority = models.CharField(max_length=20, default="LEVEL 3")
+    def __str__(self):
+        return ("%s %s" % (self.user, self.coursework))

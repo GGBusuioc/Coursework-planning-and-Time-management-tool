@@ -3,8 +3,74 @@
 
 {% block content %}
 
-<div class="container">
-  <h1 class="display-1"><p class="text-center">{{coursework_title}}</p></h1>
+
+<div class="row">
+  <div class="col-sm">
+    <h1 class="display-1"><p class="text-center">{{coursework_title}}</p></h1>
+  </div>
+
+  <div class="col-sm">
+    <div class="row">
+      <div class="col-5">
+        <h1>Progress bar</h1>
+      </div>
+      <div class="col">
+
+        {% load widget_tweaks %}
+        <form method="post" novalidate>
+          {% csrf_token %}
+
+
+
+            {% if form.non_field_errors %}
+
+              <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>  {% for error in form.non_field_errors %} {{ error }} {% endfor %}</strong>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+            {% endif %}
+
+
+          {% for field in form.visible_fields %}
+            <div class="form-group">
+              {{ field.label_tag }}
+
+              {% if form.is_bound %}
+                {% if field.errors %}
+                  {% render_field field class="form-control is-invalid" %}
+                  {% for error in field.errors %}
+                    <div class="invalid-feedback">
+                      {{ error }}
+                    </div>
+                  {% endfor %}
+                {% else %}
+                  {% render_field field class="form-control is-valid" %}
+                {% endif %}
+              {% else %}
+                {% render_field field class="form-control" %}
+              {% endif %}
+
+            </div>
+          {% endfor %}
+
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+
+
+
+
+
+
+
+
+
+
+      </div>
+    </div>
+  </div>
+
 </div>
 <div class="container">
   <p class="text-justify">{{coursework_details}}</p>

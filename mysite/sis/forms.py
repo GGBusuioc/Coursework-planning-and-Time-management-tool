@@ -18,6 +18,11 @@ class ModuleForm(forms.ModelForm):
         model = Module
         fields = ['name', 'description']
 
+class CourseworkCompletedForm(forms.ModelForm):
+    class Meta:
+        model = UserCourseworkMembership
+        fields = ['completed']
+
 class CourseworkForm(forms.ModelForm):
     class Meta:
         model = Coursework

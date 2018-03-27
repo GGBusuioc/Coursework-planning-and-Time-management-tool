@@ -132,7 +132,7 @@
   var ctx = document.getElementById("myChart");
   var myChart = new Chart(ctx, {
 
-      type: 'pie',
+      type: 'bar',
       data: {
           labels: [{% for label in graphlabel_list %} "{{label}}", {% endfor %}],
           datasets: [{

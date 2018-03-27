@@ -124,9 +124,6 @@ def coursework_scheduler(request):
     print(graphlabel_list)
 
 
-
-
-
     return render(request, 'sis/coursework_scheduler.html', {'coursework_list' : coursework_list, 'modules_list' : modules_list , 'graphdata_list':graphdata_list, 'graphlabel_list':graphlabel_list}, )
 
 
@@ -143,12 +140,32 @@ def student_redirect(request):
 
 
 def coursework_details(request, module_id, coursework_id):
+    form = CourseworkCompletedForm(request.POST or None)
+    print(form.is_valid())
+    if form.is_valid():
+        print(form.cleaned_data.get('completed'))
+        object = UserCourseworkMembership.objects.get(user=request.session['user_id'],coursework=coursework_id)
+
+        if form.cleaned_data.get('completed') == True:
+            object.completed = True
+        else:
+            object.completed = False
+        object.save()
+
+    #
+    #     form.save(commit=False)
+
+
     # search for the coursework
     coursework = Coursework.objects.get(id=coursework_id)
-
+    print(request.session['user_id'])
+    user_cousework_object = UserCourseworkMembership.objects.get(user=request.session['user_id'],coursework=coursework)
     # get its specifications
     print("here should be the coursework specifications")
-    return render(request, 'sis/coursework_details.html', {'module_id' : module_id, 'coursework_id' : coursework_id, 'coursework_details': coursework.description, 'coursework_title':coursework.title})
+
+
+
+    return render(request, 'sis/coursework_details.html', {'form':form,'module_id' : module_id, 'coursework_id' : coursework_id, 'coursework_details': coursework.description, 'coursework_title':coursework.title})
 
 def taught_modules(request):
     if not request.user.is_professor:

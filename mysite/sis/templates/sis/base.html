@@ -35,7 +35,7 @@
         {% if request.session.permission == 'staff' %}
         <a class="nav-item nav-link" href="{% url 'sis:create_module' %}"><img src={% static 'images/plus-sign.png' %} alt="Plus Sign"><strong> Add module</strong></a>
         <a class="nav-item nav-link" href="{% url 'sis:display_users' %}"><img src={% static 'images/family.png' %} alt="Display users Sign"><strong> Display users</strong></a>
-        <a class="nav-item nav-link" href="{% url 'sis:enroll_module' %}"><img src={% static 'images/plus-sign.png' %} alt="Plus Sign"><strong> Enroll</strong></a>
+        <a class="nav-item nav-link" href="{% url 'sis:enroll_module' %}"><img src={% static 'images/plus-sign.png' %} alt="Plus Sign"><strong> Enrol</strong></a>
         <a class="nav-item nav-link" href="{% url 'sis:assign_module' %}"><img src={% static 'images/plus-sign.png' %} alt="Plus Sign"><strong> Assign module</strong></a>
         {% endif %}
 
@@ -54,7 +54,7 @@
         {% endif %}
 
         {% if request.session.logged_in == 'logged_in' %}
-        <a class="nav-link nav-link" href="{% url 'sis:logout_user' %}"><strong>Logout </strong><img src={% static 'images/log-out.png' %} alt="Log out Sign"></a>
+        <a class="nav-link nav-link  mr-sm-2" href="{% url 'sis:logout_user' %}"><strong>Logout </strong><img src={% static 'images/log-out.png' %} alt="Log out Sign"></a>
         {% endif %}
 
       </div>

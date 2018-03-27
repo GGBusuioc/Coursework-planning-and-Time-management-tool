@@ -41,7 +41,7 @@ admin.site.register(User, UserAdmin)
 admin.site.register(Module)
 admin.site.register(Coursework)
 admin.site.register(UserModuleMembership)
-
+admin.site.register(UserCourseworkMembership)
 
 
 admin.site.unregister(Group)
