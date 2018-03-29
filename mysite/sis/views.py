@@ -141,19 +141,16 @@ def student_redirect(request):
 
 def coursework_details(request, module_id, coursework_id):
     form = CourseworkCompletedForm(request.POST or None)
+    print(form)
     print(form.is_valid())
     if form.is_valid():
-        print(form.cleaned_data.get('completed'))
+        print(form.cleaned_data.get('percentage'))
         object = UserCourseworkMembership.objects.get(user=request.session['user_id'],coursework=coursework_id)
 
-        if form.cleaned_data.get('completed') == True:
-            object.completed = True
-        else:
-            object.completed = False
-        object.save()
 
-    #
-    #     form.save(commit=False)
+        object.percentage = form.cleaned_data.get('percentage')
+
+        object.save()
 
 
     # search for the coursework

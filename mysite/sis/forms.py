@@ -1,6 +1,8 @@
 from django import forms
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.contrib.auth import get_user_model
+# from django.forms import widgets
+
 
 #from django.contrib.auth.forms import AuthenticationForm
 from django import forms
@@ -21,7 +23,11 @@ class ModuleForm(forms.ModelForm):
 class CourseworkCompletedForm(forms.ModelForm):
     class Meta:
         model = UserCourseworkMembership
-        fields = ['completed']
+        fields = ['percentage']
+
+        widgets = {
+            'percentage': forms.RadioSelect(),
+        }
 
 class CourseworkForm(forms.ModelForm):
     class Meta:
@@ -62,9 +68,6 @@ class AssignModuleForm(forms.ModelForm):
     def __init__(self,  *args, **kwargs ):
         super(AssignModuleForm, self).__init__(*args,**kwargs)
         self.fields['user'].queryset = User.objects.filter(professor=True)
-
-
-
 
 
 

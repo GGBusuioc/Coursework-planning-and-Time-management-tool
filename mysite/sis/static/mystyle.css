@@ -8,3 +8,5 @@ p {
      margin: 0 auto;
      width: 400px;
 }
+
+input[type=radio] {width:40px; height:40px;}
