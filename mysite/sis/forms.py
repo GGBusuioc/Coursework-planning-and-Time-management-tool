@@ -1,7 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.contrib.auth import get_user_model
-from django.utils.safestring import mark_safe
 
 # from django.forms import widgets
 
@@ -23,35 +22,19 @@ class ModuleForm(forms.ModelForm):
         fields = ['name', 'description']
 
 
-
-class HorizontalRadioSelect(forms.RadioSelect):
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        css_style = 'style="display: inline-block; margin-right: 10px;"'
-
-        self.renderer.inner_html = '<li ' + css_style + '>{choice_value}{sub_widgets}</li>'
+class MyRadioSelect(forms.RadioSelect):
+    template_name = 'sis/my_widgets/radio.html'
 
 class CourseworkCompletedForm(forms.ModelForm):
     class Meta:
         model = UserCourseworkMembership
         fields = ['percentage']
 
-
-
-
         widgets = {
-            'percentage': forms.RadioSelect(attrs={'display': 'inline-block'}),
+            'percentage': MyRadioSelect(),
+
         }
 
-        #
-
-        #percentage = forms.CharField( widget=forms.RadioSelect()
-
-
-
-                # file = forms.FieldField(widget=forms.FileInput(attrs={'class': 'rounded_list'}))
 
 
 

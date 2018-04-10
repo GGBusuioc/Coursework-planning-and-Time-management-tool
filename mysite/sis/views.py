@@ -144,9 +144,15 @@ def student_redirect(request):
 
 
 def coursework_details(request, module_id, coursework_id):
-    form = CourseworkCompletedForm(request.POST or None)
-    print(form)
+    # get current user
+    coursework = Coursework.objects.get(id=coursework_id)
+    user_cousework_object = UserCourseworkMembership.objects.get(user=request.session['user_id'],coursework=coursework)
+    print(user_cousework_object.percentage)
+
+    form = CourseworkCompletedForm(request.POST or None, initial={'percentage': user_cousework_object.percentage})
     print(form.is_valid())
+
+    print(form)
     if form.is_valid():
         print(form.cleaned_data.get('percentage'))
         object = UserCourseworkMembership.objects.get(user=request.session['user_id'],coursework=coursework_id)
@@ -157,6 +163,7 @@ def coursework_details(request, module_id, coursework_id):
         object.save()
 
 
+
     # search for the coursework
     coursework = Coursework.objects.get(id=coursework_id)
     print(request.session['user_id'])
@@ -164,8 +171,9 @@ def coursework_details(request, module_id, coursework_id):
     # get its specifications
     print("here should be the coursework specifications")
 
+    return render(request, 'sis/coursework_details.html', {'form':form, 'module_id' : module_id, 'coursework_id' : coursework_id, 'coursework_details': coursework.description, 'coursework_title':coursework.title})
 
-    return render(request, 'sis/coursework_details.html', {'form':form,'module_id' : module_id, 'coursework_id' : coursework_id, 'coursework_details': coursework.description, 'coursework_title':coursework.title})
+
 
 def taught_modules(request):
     if not request.user.is_professor:
@@ -225,8 +233,6 @@ def create_coursework(request):
             if UserModuleMembership.objects.get(user=student, module=module):
                 print("You need to do some stuff for %s" % (student))
                 UserCourseworkMembership.objects.create(user=student, coursework=new_coursework)
-
-
 
 
         # create entry in UserCourseworkMembership

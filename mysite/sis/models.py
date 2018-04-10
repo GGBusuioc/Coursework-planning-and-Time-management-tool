@@ -131,11 +131,11 @@ class UserCourseworkMembership(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     coursework = models.ForeignKey(Coursework, default="", on_delete=models.CASCADE)
     PERCENTAGE_CHOICES = (
-        (0, '0',),
-        (25, '25',),
-        (50, '50',),
-        (75, '75',),
-        (100, '100',),
+        (0, '0%',),
+        (25, '25%',),
+        (50, '50%',),
+        (75, '75%',),
+        (100, 'Done',),
     )
     percentage = models.IntegerField(default=0, choices=PERCENTAGE_CHOICES)
     priority = models.CharField(max_length=20, default="LEVEL 3")
