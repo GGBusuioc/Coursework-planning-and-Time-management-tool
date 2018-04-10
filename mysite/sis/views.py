@@ -88,7 +88,7 @@ def index(request):
 
 
 def coursework_scheduler(request):
-    modules = UserModuleMembership.objects.filter(user__id=request.session['user_id'])
+    modules = UserModuleMembership.objects.filter(user__id = request.session['user_id'])
 
     modules_list = []
     graphdata_list = []
@@ -114,10 +114,17 @@ def coursework_scheduler(request):
             module = Module.objects.get(name = coursework.module)
             coursework_payload['module_id'] = module.id
             coursework_payload['module_name'] = module.name
-            graphdata_list.append(module.credits/(100/coursework.percentage))
-            graphlabel_list.append(coursework.title)
-            #print(coursework_payload)
+
+            # if the coursework is not mark as completed
+            objects = UserCourseworkMembership.objects.filter(user__id = request.session['user_id'], coursework = coursework.id)
+            for object in objects:
+                if object.percentage != 100:
+                    graphdata_list.append(module.credits/(100/coursework.percentage))
+                    graphlabel_list.append(coursework.title)
+
             coursework_list.append(coursework_payload)
+
+
     print(graphlabel_list)
 
 
