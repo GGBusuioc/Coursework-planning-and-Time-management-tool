@@ -30,9 +30,6 @@ def login_user(request):
 
         user = authenticate(email=email, password=password)
 
-
-
-
         if user is not None:
             if user.is_active:
 
@@ -161,7 +158,6 @@ def coursework_details(request, module_id, coursework_id):
     print("here should be the coursework specifications")
 
 
-
     return render(request, 'sis/coursework_details.html', {'form':form,'module_id' : module_id, 'coursework_id' : coursework_id, 'coursework_details': coursework.description, 'coursework_title':coursework.title})
 
 def taught_modules(request):
@@ -213,7 +209,20 @@ def create_coursework(request):
         end = request.POST['end']
         percentage = request.POST['percentage']
 
-        Coursework.objects.create(title=title, description=description, start=start, end=end, module=module, percentage=percentage)
+        new_coursework = Coursework.objects.create(title=title, description=description, start=start, end=end, module=module, percentage=percentage)
+
+        # for each student enrolled in that module
+        students = User.objects.filter(student=True)
+        for student in students:
+            print(student)
+            if UserModuleMembership.objects.get(user=student, module=module):
+                print("You need to do some stuff for %s" % (student))
+                UserCourseworkMembership.objects.create(user=student, coursework=new_coursework)
+
+
+
+
+        # create entry in UserCourseworkMembership
 
     return render(request,'sis/create_coursework.html', {'form':form})
 
