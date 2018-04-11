@@ -22,6 +22,10 @@ import json
 from django.contrib import messages
 
 
+from django.core.mail import send_mail
+
+
+
 @csrf_exempt
 def login_user(request):
     if request.method == "POST":
@@ -88,6 +92,16 @@ def index(request):
 
 
 def coursework_scheduler(request):
+
+    # display notifications
+    print("Display notifications")
+    notification_objects = Notification.objects.filter(user__id = request.session['user_id'])
+    for notification in notification_objects:
+        print(notification.notification)
+
+
+
+
     modules = UserModuleMembership.objects.filter(user__id = request.session['user_id'])
 
     modules_list = []
@@ -140,6 +154,26 @@ def professor_redirect(request):
 
 
 def student_redirect(request):
+    print("Student redirect notifications")
+    notification_objects = Notification.objects.filter(user__id = request.session['user_id'])
+    for notification in notification_objects:
+        print(notification.notification)
+        messages.info(request, notification.notification)
+        print("Added message to messages")
+
+    # check if any deadline is close
+
+    
+
+
+    # empty the notifications
+    print("Display notifications after deletion")
+        # for notification in notification_objects:
+        #     notification.delete()
+
+    print(notification_objects)
+
+
     return render(request, 'sis/student_home.html')
 
 
@@ -211,7 +245,6 @@ def create_coursework(request):
     print("request user before form")
 
     form = CourseworkForm(request.POST, user=request.user)
-    print("AAAA")
 
     print(form.is_valid())
     # print(form.errors.as_data())
@@ -226,16 +259,17 @@ def create_coursework(request):
 
         new_coursework = Coursework.objects.create(title=title, description=description, start=start, end=end, module=module, percentage=percentage)
 
+
         # for each student enrolled in that module
         students = User.objects.filter(student=True)
         for student in students:
             print(student)
             if UserModuleMembership.objects.get(user=student, module=module):
-                print("You need to do some stuff for %s" % (student))
+                # let the student know that a new coursework has been created
+                Notification.objects.create(user=student, notification="New coursework created. %s - %s. " % (new_coursework.title, module))
+                print("Notifications created")
                 UserCourseworkMembership.objects.create(user=student, coursework=new_coursework)
 
-
-        # create entry in UserCourseworkMembership
 
     return render(request,'sis/create_coursework.html', {'form':form})
 
@@ -267,7 +301,8 @@ def enroll_module(request):
     if form.is_valid():
         user = User.objects.get(id=request.POST['user'])
         module = Module.objects.get(id=request.POST['module'])
-
+        Notification.objects.create(user=user, notification="You have been enrolled to a new module. Welcome to %s. " % (module))
+        print("Module notification created")
         UserModuleMembership.objects.create(user=user, module=module)
 
     return render(request,'sis/enroll_module.html', {'form':form })

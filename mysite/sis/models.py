@@ -65,6 +65,9 @@ class User(AbstractBaseUser):
     # superuser
     staff       = models.BooleanField(default=False)
 
+
+
+
     USERNAME_FIELD = 'email'
     # USERNAME_FIELD and password are required by default
     REQUIRED_FIELD = []
@@ -116,6 +119,18 @@ class Coursework(models.Model):
 
     def __str__(self):
         return "%s %s"  % (self.module, self.title)
+
+
+
+class Notification(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    notification = models.CharField(max_length=255, unique=False)
+    
+
+    def __str__(self):
+        return ("%s %s" % (self.user, self.notification))
+
+
 
 class UserModuleMembership(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
