@@ -125,7 +125,7 @@ class Coursework(models.Model):
 class Notification(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     notification = models.CharField(max_length=255, unique=False)
-    
+
 
     def __str__(self):
         return ("%s %s" % (self.user, self.notification))
@@ -144,7 +144,7 @@ class UserModuleMembership(models.Model):
 
 class UserCourseworkMembership(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    coursework = models.ForeignKey(Coursework, default="", on_delete=models.CASCADE)
+    coursework = models.ForeignKey(Coursework, on_delete=models.CASCADE)
     PERCENTAGE_CHOICES = (
         (0, '0%',),
         (25, '25%',),

@@ -17,12 +17,13 @@ from django.urls import reverse
 from django.template import loader
 from django.template.response import TemplateResponse
 from .forms import *
-import json
 
 from django.contrib import messages
 
 
-from django.core.mail import send_mail
+import datetime
+from datetime import timedelta
+
 
 
 
@@ -154,6 +155,10 @@ def professor_redirect(request):
 
 
 def student_redirect(request):
+
+    now = datetime.datetime.now()
+
+
     print("Student redirect notifications")
     notification_objects = Notification.objects.filter(user__id = request.session['user_id'])
     for notification in notification_objects:
@@ -163,13 +168,32 @@ def student_redirect(request):
 
     # check if any deadline is close
 
-    
+    # for all the courseworks that the student has
+    user_coursework_objects = UserCourseworkMembership.objects.filter(user__id = request.session['user_id'])
+    for user_coursework in user_coursework_objects:
+        print("lol")
+        print(user_coursework.coursework)
+        coursework = user_coursework.coursework
+        print(coursework.id)
+        coursework_object = Coursework.objects.get(id=coursework.id)
+        print("Deadline %s" % (coursework_object.end))
+        print(now.date())
+        print(now.date()+datetime.timedelta(days=1))
+        if now.date()+datetime.timedelta(days=1) == coursework_object.end:
+            # check if the coursework is marked as completed
+            if user_coursework.percentage < 100:
+                messages.error(request, "Deadline for %s is %s. Your progress so far is: %d PERCENT" % (coursework_object ,coursework_object.end, user_coursework.percentage))
+            # add notification
+
+
+        # for each coursework check if the deadline is near
+
 
 
     # empty the notifications
     print("Display notifications after deletion")
-        # for notification in notification_objects:
-        #     notification.delete()
+    for notification in notification_objects:
+        notification.delete()
 
     print(notification_objects)
 
