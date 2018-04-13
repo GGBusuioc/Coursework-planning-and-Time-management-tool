@@ -9,10 +9,6 @@
   <script src={% static 'fullcalendar.js' %}></script>
   <script src={% static 'Chart.js' %}></script>
 
-
-
-
-
   <script>
     $(document).ready(function() {
 
@@ -33,8 +29,16 @@
       header: {
         left: 'prev, next, today myCustomButton',
         center: 'title',
-        right: 'month, agendaWeek, agendaDay'
+        right: 'month, basicWeek, agendaFourDay'
       },
+
+      views: {
+      agendaFourDay: {
+        type: 'basic',
+        duration: { weeks: 8 },
+        buttonText: 'two months'
+      }
+    },
 
         // put your options and callbacks here
         // weekends: false,
@@ -49,15 +53,19 @@
            title  :   '{{dict.module_name}} - {{dict.title}}',
            start  :   '{{dict.start}}',
            end    :   '{{dict.end}}',
-           {% if dict.percentage <= 10 %}
-            color  : 'green',
-          {% elif dict.percentage <= 20%}
-            color  : 'blue',
-          {% else %}
-            color  : 'red',
+          //  {% if dict.percentage <= 10 %}
+          //   color  : 'green',
+          // {% elif dict.percentage <= 20%}
+          //   color  : '#ae81ff',
+          // {% else %}
+          //   color  : 'red',
+          //
+          //
+          //  {% endif %}
 
 
-           {% endif %}
+
+          color: '{{dict.color}}',
            url: 'http://localhost:8000/coursework_details/{{dict.module_id}}/{{dict.id}}/'
          },
       {% endfor %}
@@ -69,19 +77,12 @@
       $('#calendar').fullCalendar('next');
     })
 
-    // function( isLoading, view )
 
     });
 
-
-
     </script>
 
-
-
-
     {% endblock %}
-
 
   {% block content %}
   <br>
@@ -135,24 +136,25 @@
           datasets: [{
               label: 'Credits',
               data: {{graphdata_list}},
-              backgroundColor: [
-                // {% for label in graphlabel_list %} 'rgba(153, 102, 255, 0.2)', {% endfor %}
-                  'rgba(255, 99, 132, 0.2)',
-                  'rgba(54, 162, 235, 0.2)',
-                  'rgba(255, 206, 86, 0.2)',
-                  'rgba(153, 102, 255, 0.2)',
-                  'rgba(255, 159, 64, 0.2)'
-              ],
-              borderColor: [
-                  // {% for label in graphlabel_list %} 'rgba(75, 192, 192, 1)', {% endfor %}
-                  'rgba(255,99,132,1)',
-                  'rgba(54, 162, 235, 1)',
-                  'rgba(255, 206, 86, 1)',
-                  'rgba(75, 192, 192, 1)',
-                  'rgba(153, 102, 255, 1)',
-                  'rgba(255, 159, 64, 1)'
-              ],
-              borderWidth: 1
+              // backgroundColor: [
+              //   // {% for label in graphlabel_list %} 'rgba(153, 102, 255, 0.2)', {% endfor %}
+              //     'rgba(255, 99, 132, 0.2)',
+              //     'rgba(54, 162, 235, 0.2)',
+              //     'rgba(255, 206, 86, 0.2)',
+              //     'rgba(153, 102, 255, 0.2)',
+              //     'rgba(255, 159, 64, 0.2)'
+              // ],
+              backgroundColor: [{% for color in colors_used %} "{{color}}", {% endfor %}],
+              // borderColor: [
+              //     // {% for label in graphlabel_list %} 'rgba(75, 192, 192, 1)', {% endfor %}
+              //     'rgba(255,99,132,1)',
+              //     'rgba(54, 162, 235, 1)',
+              //     'rgba(255, 206, 86, 1)',
+              //     'rgba(75, 192, 192, 1)',
+              //     'rgba(153, 102, 255, 1)',
+              //     'rgba(255, 159, 64, 1)'
+              // ],
+              // borderWidth: 1
           }]
       },
       options: {

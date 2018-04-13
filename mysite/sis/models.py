@@ -116,6 +116,7 @@ class Coursework(models.Model):
     description =  models.TextField(blank=True, null=True)
     percentage = models.IntegerField(blank=True, null=True)
     module = models.ForeignKey(Module, on_delete=models.CASCADE)
+    color = models.CharField(max_length=255, default="#948b79")
 
     def __str__(self):
         return "%s %s"  % (self.module, self.title)

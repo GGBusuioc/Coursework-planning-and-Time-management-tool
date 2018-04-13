@@ -93,15 +93,13 @@ def index(request):
 
 
 def coursework_scheduler(request):
+    now = datetime.datetime.now()
 
     # display notifications
     print("Display notifications")
     notification_objects = Notification.objects.filter(user__id = request.session['user_id'])
     for notification in notification_objects:
         print(notification.notification)
-
-
-
 
     modules = UserModuleMembership.objects.filter(user__id = request.session['user_id'])
 
@@ -111,10 +109,12 @@ def coursework_scheduler(request):
 
     coursework_objects = []
     for module in modules:
-        courseworks = Coursework.objects.filter(module__id = module.module_id )
+        courseworks = Coursework.objects.filter(module__id = module.module_id, end__gte = now)
         coursework_objects.append(courseworks)
         modules_list.append(str(module.module))
         # graphdata_list.append(module.credits)
+
+    color_list = ['#f92672', '#a6e22e', '#66d9ef', '#fd971f', '#ae81ff', '#8d7b92', '#a07b7b', '#9290a6', '#9aaca0', '#b595ac']
 
 
     coursework_list = []
@@ -125,25 +125,44 @@ def coursework_scheduler(request):
             coursework_payload['title'] = coursework.title
             coursework_payload['start'] = coursework.start
             coursework_payload['end'] = coursework.end
+            coursework_payload['color'] = coursework.color
             coursework_payload['percentage'] = coursework.percentage
             module = Module.objects.get(name = coursework.module)
             coursework_payload['module_id'] = module.id
             coursework_payload['module_name'] = module.name
 
+            coursework_list.append(coursework_payload)
+
+
             # if the coursework is not mark as completed
             objects = UserCourseworkMembership.objects.filter(user__id = request.session['user_id'], coursework = coursework.id)
             for object in objects:
+                coursework_payload['progress'] =  object.percentage
+
                 if object.percentage != 100:
+
                     graphdata_list.append(module.credits/(100/coursework.percentage))
                     graphlabel_list.append(coursework.title)
+                    print(object)
 
-            coursework_list.append(coursework_payload)
+    # print(coursework_list)
+    colors_used = []
+    i = 0
+    for coursework in coursework_list:
+        coursework['color'] = color_list[i]
+
+        # if coursework not completed
+        print(coursework['progress'])
+        if coursework['progress'] != 100:
+            colors_used.append(color_list[i])
+        i = i + 1
 
 
     print(graphlabel_list)
 
 
-    return render(request, 'sis/coursework_scheduler.html', {'coursework_list' : coursework_list, 'modules_list' : modules_list , 'graphdata_list':graphdata_list, 'graphlabel_list':graphlabel_list}, )
+
+    return render(request, 'sis/coursework_scheduler.html', {'colors_used': colors_used,'coursework_list' : coursework_list, 'modules_list' : modules_list , 'graphdata_list':graphdata_list, 'graphlabel_list':graphlabel_list}, )
 
 
 
@@ -208,9 +227,9 @@ def coursework_details(request, module_id, coursework_id):
     print(user_cousework_object.percentage)
 
     form = CourseworkCompletedForm(request.POST or None, initial={'percentage': user_cousework_object.percentage})
-    print(form.is_valid())
-
-    print(form)
+    # print(form.is_valid())
+    #
+    # print(form)
     if form.is_valid():
         print(form.cleaned_data.get('percentage'))
         object = UserCourseworkMembership.objects.get(user=request.session['user_id'],coursework=coursework_id)
@@ -224,10 +243,8 @@ def coursework_details(request, module_id, coursework_id):
 
     # search for the coursework
     coursework = Coursework.objects.get(id=coursework_id)
-    print(request.session['user_id'])
     user_cousework_object = UserCourseworkMembership.objects.get(user=request.session['user_id'],coursework=coursework)
     # get its specifications
-    print("here should be the coursework specifications")
 
     return render(request, 'sis/coursework_details.html', {'form':form, 'module_id' : module_id, 'coursework_id' : coursework_id, 'coursework_details': coursework.description, 'coursework_title':coursework.title})
 
@@ -271,8 +288,7 @@ def create_coursework(request):
     form = CourseworkForm(request.POST, user=request.user)
 
     print(form.is_valid())
-    # print(form.errors.as_data())
-    # print(form.is_valid())
+
     if form.is_valid():
         module = Module.objects.get(id=request.POST['module'])
         title = request.POST['title']
