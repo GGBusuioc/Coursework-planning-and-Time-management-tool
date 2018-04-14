@@ -109,7 +109,9 @@ def coursework_scheduler(request):
 
     coursework_objects = []
     for module in modules:
-        courseworks = Coursework.objects.filter(module__id = module.module_id, end__gte = now)
+        courseworks = Coursework.objects.filter(module__id = module.module_id)
+        #all_courseworks =  Coursework.objects.filter(module__id = module.module_id)
+
         coursework_objects.append(courseworks)
         modules_list.append(str(module.module))
         # graphdata_list.append(module.credits)
@@ -130,6 +132,7 @@ def coursework_scheduler(request):
             module = Module.objects.get(name = coursework.module)
             coursework_payload['module_id'] = module.id
             coursework_payload['module_name'] = module.name
+            coursework_payload['progress'] = 0
 
             coursework_list.append(coursework_payload)
 
@@ -139,27 +142,23 @@ def coursework_scheduler(request):
             for object in objects:
                 coursework_payload['progress'] =  object.percentage
 
-                if object.percentage != 100:
+                if object.percentage != 100 and coursework_payload['end'] > now.date():
 
                     graphdata_list.append(module.credits/(100/coursework.percentage))
                     graphlabel_list.append(coursework.title)
-                    print(object)
 
     # print(coursework_list)
     colors_used = []
     i = 0
     for coursework in coursework_list:
-        coursework['color'] = color_list[i]
+        # if the cw deadline is in the past then keep its color
 
-        # if coursework not completed
-        print(coursework['progress'])
-        if coursework['progress'] != 100:
+
+        if coursework['progress'] != 100 and coursework['end'] > now.date():
+            coursework['color'] = color_list[i]
+
             colors_used.append(color_list[i])
-        i = i + 1
-
-
-    print(graphlabel_list)
-
+            i = i + 1
 
 
     return render(request, 'sis/coursework_scheduler.html', {'colors_used': colors_used,'coursework_list' : coursework_list, 'modules_list' : modules_list , 'graphdata_list':graphdata_list, 'graphlabel_list':graphlabel_list}, )
@@ -203,7 +202,6 @@ def student_redirect(request):
             if user_coursework.percentage < 100:
                 messages.error(request, "Deadline for %s is %s. Your progress so far is: %d PERCENT" % (coursework_object ,coursework_object.end, user_coursework.percentage))
             # add notification
-
 
         # for each coursework check if the deadline is near
 
@@ -357,6 +355,3 @@ def assign_module(request):
         module = Module.objects.get(id=request.POST['module'])
 
         UserModuleMembership.objects.create(user=user, module=module)
-
-
-    return render(request,'sis/assign_module.html', {'form':form })
