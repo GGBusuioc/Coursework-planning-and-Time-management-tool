@@ -59,31 +59,14 @@
            {% if dict.progress == 100 %}
            status: "FINISHED !!",
            {% else %}
-           status: "{{dict.progress}}% DONE !!",
+           status: "{{dict.progress}}% DONE !! PERCENTAGE WORTH: {{dict.percentage}}%",
            {% endif %}
-
-
-
-          //  {% if dict.percentage <= 10 %}
-          //   color  : 'green',
-          // {% elif dict.percentage <= 20%}
-          //   color  : '#ae81ff',
-          // {% else %}
-          //   color  : 'red',
-          //
-          //
-          //  {% endif %}
-
-
 
           color: '{{dict.color}}',
            url: 'http://localhost:8000/coursework_details/{{dict.module_id}}/{{dict.id}}/'
          },
       {% endfor %}
     ],
-
-
-
 
      displayEventTime: false,
      eventRender: function(event, element, view) {
@@ -92,24 +75,11 @@
            content: event.status,
 
       });
-
-      // eventRender: function(eventObj, $el) {
-      // $el.popover({
-      //   title: eventObj.title,
-      //   content: eventObj.title,
-      //   trigger: 'hover',
-      //   placement: 'top',
-      //   container: 'body'
-      // });
    }
-
     })
-
     $('#my-next-button').click(function(){
       $('#calendar').fullCalendar('next');
     })
-
-
     });
 
     </script>
@@ -129,65 +99,61 @@
       <div class="col-6 ">
           <div class="col-xs-4 text-center">
 
-              <div class="col">  <h1>Coursework Priority<h1>
+              <div class="col">
+                 <h1>Coursework Priority<h1>
+
+              </div>
+              <div class="row">
+                <div class="col-6">
+                  <canvas id="myChart6"></canvas>
+                </div>
+                <div class="col-6">
+                  <canvas id="myChart7"></canvas>
+                </div>
+              </div>
+
+                <div class="row">
+                  <div class="col" id="myDIV2">
+                    <canvas id="myChart2"></canvas>
+                  </div>
+                  <div class="col" id="myDIV3">
+                    <canvas id="myChart3"></canvas>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col" id="myDIV4">
+                    <canvas id="myChart4"></canvas>
+                  </div>
+                  <div class="col" id="myDIV5">
+                    <canvas id="myChart5"></canvas>
+                  </div>
 
 
-                 <!-- {% for module in modules_list %}
-                         <h3>{{module}}</h3>
-                       {% endfor %} -->
-                       <button onclick="myFunction()">Bar</button>
+                </div>
 
-
-                        <div id="myDIV">
-                          <canvas id="myChart"></canvas>
-                        </div>
-
-          </div>
 
         </div>
       </div>
   </div>
 
+
+
   <script>
 
-  function myFunction() {
 
-    var x = document.getElementById("myDIV");
-    if (x.style.display === "none") {
-        x.style.display = "block";
-    } else {
-        x.style.display = "none";
-    }
-}
 
-  var ctx = document.getElementById("myChart");
+  var ctx = document.getElementById("myChart2");
   var myChart = new Chart(ctx, {
 
-      type: 'polarArea',
+      type: 'pie',
       data: {
           labels: [{% for label in graphlabel_list %} "{{label}}", {% endfor %}],
           datasets: [{
               label: 'Credits',
               data: {{graphdata_list}},
-              // backgroundColor: [
-              //   // {% for label in graphlabel_list %} 'rgba(153, 102, 255, 0.2)', {% endfor %}
-              //     'rgba(255, 99, 132, 0.2)',
-              //     'rgba(54, 162, 235, 0.2)',
-              //     'rgba(255, 206, 86, 0.2)',
-              //     'rgba(153, 102, 255, 0.2)',
-              //     'rgba(255, 159, 64, 0.2)'
-              // ],
+
               backgroundColor: [{% for color in colors_used %} "{{color}}", {% endfor %}],
-              // borderColor: [
-              //     // {% for label in graphlabel_list %} 'rgba(75, 192, 192, 1)', {% endfor %}
-              //     'rgba(255,99,132,1)',
-              //     'rgba(54, 162, 235, 1)',
-              //     'rgba(255, 206, 86, 1)',
-              //     'rgba(75, 192, 192, 1)',
-              //     'rgba(153, 102, 255, 1)',
-              //     'rgba(255, 159, 64, 1)'
-              // ],
-              // borderWidth: 1
+
           }]
       },
       options: {
@@ -200,13 +166,160 @@
           },
           title: {
             display: true,
-            text: 'Coursework completition priority'
+            text: 'Overall coursework priority chart'
+        }
+      }
+  });
+
+  var ctx = document.getElementById("myChart3");
+  var myChart = new Chart(ctx, {
+
+      type: 'pie',
+      data: {
+          labels: [{% for label in ongoing_courseworks_labels %} "{{label}}", {% endfor %}],
+          datasets: [{
+              label: 'Credits',
+              data: {{ongoing_courseworks_data}},
+
+              backgroundColor: [{% for color in ongoing_colors %} "{{color}}", {% endfor %}],
+
+          }]
+      },
+      options: {
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      beginAtZero:true
+                  }
+              }]
+          },
+          title: {
+            display: true,
+            text: 'Ongoing courseworks priority chart'
+        }
+      }
+  });
+
+  var ctx = document.getElementById("myChart4");
+  var myChart = new Chart(ctx, {
+
+      type: 'horizontalBar',
+      data: {
+          labels: [{% for label in graphlabel_list %} "{{label}}", {% endfor %}],
+          datasets: [{
+              label: 'Credits',
+              data: {{graphdata_list}},
+
+              backgroundColor: [{% for color in colors_used %} "{{color}}", {% endfor %}],
+
+          }]
+      },
+      options: {
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      beginAtZero:true
+                  }
+              }]
+          },
+          title: {
+            display: true,
+            text: 'Overall coursework priority chart'
+        }
+
+      }
+  });
+
+  var ctx = document.getElementById("myChart5");
+  var myChart = new Chart(ctx, {
+
+      type: 'bar',
+      data: {
+          labels: [{% for label in ongoing_courseworks_labels %} "{{label}}", {% endfor %}],
+          datasets: [{
+              label: 'Credits',
+              data: {{ongoing_courseworks_data}},
+
+              backgroundColor: [{% for color in ongoing_colors %} "{{color}}", {% endfor %}],
+
+          }]
+      },
+      options: {
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      beginAtZero:true
+                  }
+              }]
+          },
+          title: {
+            display: true,
+            text: 'Ongoing courseworks priority chart'
         }
 
       }
   });
 
 
+  var ctx = document.getElementById("myChart6");
+  var myChart = new Chart(ctx, {
+
+      type: 'polarArea',
+      data: {
+          labels: [{% for label in ongoing_courseworks_labels %} "{{label}}", {% endfor %}],
+          datasets: [{
+              label: 'Credits',
+              data: {{radar_data}},
+
+              backgroundColor: [{% for color in ongoing_colors %} "{{color}}", {% endfor %}],
+
+          }]
+      },
+      options: {
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      beginAtZero:true
+                  }
+              }]
+          },
+          title: {
+            display: true,
+            text: 'Number of hours you should spend today on studying'
+        }
+
+      }
+  });
+
+  var ctx = document.getElementById("myChart7");
+  var myChart = new Chart(ctx, {
+
+      type: 'doughnut',
+      data: {
+          labels: [{% for label in ongoing_courseworks_labels %} "{{label}}", {% endfor %}],
+          datasets: [{
+              label: 'Credits',
+              data: {{radar_data}},
+
+              backgroundColor: [{% for color in ongoing_colors %} "{{color}}", {% endfor %}],
+
+          }]
+      },
+      options: {
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      beginAtZero:true
+                  }
+              }]
+          },
+          title: {
+            display: true,
+            text: 'Number of hours you should spend today on studying'
+        }
+
+      }
+  });
 
 
   </script>

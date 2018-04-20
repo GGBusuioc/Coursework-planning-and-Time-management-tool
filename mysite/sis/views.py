@@ -106,10 +106,13 @@ def coursework_scheduler(request):
     modules_list = []
     graphdata_list = []
     graphlabel_list = []
-
+    last_data_list = []
+    # big_coursework = False
     coursework_objects = []
     for module in modules:
         courseworks = Coursework.objects.filter(module__id = module.module_id)
+
+        # if coursework is ongoing
         #all_courseworks =  Coursework.objects.filter(module__id = module.module_id)
 
         coursework_objects.append(courseworks)
@@ -118,9 +121,13 @@ def coursework_scheduler(request):
 
     color_list = ['#f92672', '#a6e22e', '#66d9ef', '#fd971f', '#ae81ff', '#8d7b92', '#a07b7b', '#9290a6', '#9aaca0', '#b595ac']
 
+    ongoing_courseworks_labels = []
+    ongoing_courseworks_data = []
+
 
     coursework_list = []
     for an_object in coursework_objects:
+
         for coursework in an_object:
             coursework_payload = {}
             coursework_payload['id'] = coursework.id
@@ -134,6 +141,7 @@ def coursework_scheduler(request):
             coursework_payload['module_name'] = module.name
             coursework_payload['progress'] = 0
 
+
             coursework_list.append(coursework_payload)
 
 
@@ -142,16 +150,59 @@ def coursework_scheduler(request):
             for object in objects:
                 coursework_payload['progress'] =  object.percentage
 
+                if coursework_payload['start'] <= now.date() and coursework_payload['end'] > now.date():
+                    ongoing_courseworks_labels.append(coursework_payload['title'])
+
+                    # if module.credits/(100/coursework.percentage)>=10:
+                        # big_coursework = True
+
+                    ongoing_courseworks_data.append(module.credits/(100/coursework.percentage))
+
+                    nr_hours = (module.credits/(100/coursework.percentage) * 15) / 60
+
+                    # if any coursework is big and above 10credits & there are more than 5 courseworks
+
+                    # else use this formula
+                    # nr_hours = (module.credits/(100/coursework.percentage) * 30) / 60
+
+                    last_data_list.append(nr_hours)
+
+
                 if object.percentage != 100 and coursework_payload['end'] > now.date():
 
                     graphdata_list.append(module.credits/(100/coursework.percentage))
+                    # print(module.credits/(100/coursework.percentage))
+
+
+                    # if any coursework is big and above 10credits & there are more than 5 courseworks
+
                     graphlabel_list.append(coursework.title)
 
+
+    # print("Ongoing Courseworks")
+    # print(ongoing_courseworks_labels)
+    # print(ongoing_courseworks_data)
+    radar_data =[]
+    print("HERE")
+    print(last_data_list)
+    for el in last_data_list:
+        # print(int(round(el, 0)))
+        radar_data.append(int(round(el, 0)))
+
+    print("RADAR DATA")
+    print(radar_data)
     # print(coursework_list)
+    ongoing_colors =[]
     colors_used = []
     i = 0
     for coursework in coursework_list:
         # if the cw deadline is in the past then keep its color
+        # for el in ongoing_courseworks_labels:
+        #     print(coursework['title'])
+        #     if(coursework['title']==el):
+        #         print("MATCH")
+        #         print(el)
+        #         ongoing_colors.append(coursework)
 
 
         if coursework['progress'] != 100 and coursework['end'] > now.date():
@@ -161,7 +212,24 @@ def coursework_scheduler(request):
             i = i + 1
 
 
-    return render(request, 'sis/coursework_scheduler.html', {'colors_used': colors_used,'coursework_list' : coursework_list, 'modules_list' : modules_list , 'graphdata_list':graphdata_list, 'graphlabel_list':graphlabel_list}, )
+
+
+
+
+        for el in ongoing_courseworks_labels:
+            if(coursework['title']==el):
+
+                ongoing_colors.append(coursework['color'])
+
+
+
+    # compute data for the last graph
+
+
+
+
+
+    return render(request, 'sis/coursework_scheduler.html', {'radar_data':radar_data,'ongoing_colors':ongoing_colors,'ongoing_courseworks_labels':ongoing_courseworks_labels, 'ongoing_courseworks_data':ongoing_courseworks_data, 'colors_used': colors_used,'coursework_list' : coursework_list, 'modules_list' : modules_list , 'graphdata_list':graphdata_list, 'graphlabel_list':graphlabel_list}, )
 
 
 
@@ -202,12 +270,9 @@ def student_redirect(request):
         if coursework_object.end-datetime.timedelta(days=1) < now.date() and user_coursework.percentage != 100:
             messages.error(request, "Deadline for %s has passed. Your progress so far is: %d PERCENT" % (coursework_object , user_coursework.percentage))
 
-
-
             # add notification
 
         # for each coursework check if the deadline is near
-
 
 
     # empty the notifications
@@ -247,7 +312,11 @@ def coursework_details(request, module_id, coursework_id):
     user_cousework_object = UserCourseworkMembership.objects.get(user=request.session['user_id'],coursework=coursework)
     # get its specifications
 
-    return render(request, 'sis/coursework_details.html', {'form':form, 'module_id' : module_id, 'coursework_id' : coursework_id, 'coursework_details': coursework.description, 'coursework_title':coursework.title})
+
+    # get the number of credits for the project
+    module_object = Module.objects.get(id=module_id)
+
+    return render(request, 'sis/coursework_details.html', {'form':form, 'module_id' : module_id, 'coursework_id' : coursework_id, 'coursework_percentage':coursework.percentage, 'module_title':module_object.name,'module_credits':module_object.credits, 'coursework_details': coursework.description, 'coursework_title':coursework.title})
 
 
 
@@ -352,9 +421,13 @@ def assign_module(request):
     if not request.user.is_staff:
         return HttpResponseRedirect('/login_user/')
 
+    students = User.objects.filter(student=True)
+
     form = AssignModuleForm(request.POST or None)
     if form.is_valid():
         user = User.objects.get(id=request.POST['user'])
         module = Module.objects.get(id=request.POST['module'])
 
         UserModuleMembership.objects.create(user=user, module=module)
+
+    return render(request,'sis/enroll_module.html', {'form':form, 'students':students})
