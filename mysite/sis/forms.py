@@ -43,7 +43,6 @@ class CourseworkForm(forms.ModelForm):
     class Meta:
         model = Coursework
         fields = ['title', 'description', 'start', 'end', 'percentage', 'module']
-        # exclude = ("module",)
         widgets = {
         'start' : DateInput(),
         'end' : DateInput(),
@@ -84,7 +83,6 @@ class AssignModuleForm(forms.ModelForm):
 
 class UserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
-    # information about the class
     class Meta:
         model = User
         fields = ['email', 'password']

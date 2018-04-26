@@ -102,15 +102,13 @@ class User(AbstractBaseUser):
 
 class Module(models.Model):
     name = models.CharField(max_length=255, unique=True)
-    description = models.TextField(max_length=255, default="")
+    description = models.TextField(max_length=4000, default="")
     credits = models.IntegerField(default=10)
     def __str__(self):
         return self.name
 
 class Coursework(models.Model):
-    title = models.CharField(max_length=255, unique=True)
-    # start = models.CharField(max_length=255, default="unspecified")
-    # end = models.CharField(max_length=255, default="unspecified")
+    title = models.CharField(max_length=255)
     start = models.DateField()
     end = models.DateField()
     description =  models.TextField(blank=True, null=True)
@@ -121,6 +119,9 @@ class Coursework(models.Model):
     def __str__(self):
         return "%s %s"  % (self.module, self.title)
 
+    class Meta:
+        unique_together = ("module", "title")
+        index_together = ["module", "title"]
 
 
 class Notification(models.Model):
@@ -154,6 +155,5 @@ class UserCourseworkMembership(models.Model):
         (100, 'Done',),
     )
     percentage = models.IntegerField(default=0, choices=PERCENTAGE_CHOICES)
-    priority = models.CharField(max_length=20, default="LEVEL 3")
     def __str__(self):
         return ("%s %s" % (self.user, self.coursework))

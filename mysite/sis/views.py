@@ -79,11 +79,7 @@ def login_user(request):
 
 def logout_user(request):
     logout(request)
-    form = UserForm(request.POST or None)
-    context = {
-        "form": form,
-    }
-    return render(request, 'sis/login.html', context)
+    return render(request, 'sis/login.html')
 
 def index(request):
     return render(request, 'sis/index.html')
@@ -93,6 +89,10 @@ def index(request):
 
 
 def coursework_scheduler(request):
+
+    if not request.user.is_student:
+        return HttpResponseRedirect('/login_user/')
+
     now = datetime.datetime.now()
 
     # display notifications
@@ -120,6 +120,7 @@ def coursework_scheduler(request):
         # graphdata_list.append(module.credits)
 
     color_list = ['#f92672', '#a6e22e', '#66d9ef', '#fd971f', '#ae81ff', '#8d7b92', '#a07b7b', '#9290a6', '#9aaca0', '#b595ac']
+    # color_list = ['#8E44AD', '#2E86C1', '#1E8449']
 
     ongoing_courseworks_labels = []
     ongoing_courseworks_data = []
@@ -143,14 +144,15 @@ def coursework_scheduler(request):
 
 
             coursework_list.append(coursework_payload)
-
+            print("COURSEWORK")
+            print(coursework.title)
 
             # if the coursework is not mark as completed
             objects = UserCourseworkMembership.objects.filter(user__id = request.session['user_id'], coursework = coursework.id)
             for object in objects:
                 coursework_payload['progress'] =  object.percentage
 
-                if coursework_payload['start'] <= now.date() and coursework_payload['end'] > now.date():
+                if coursework_payload['start'] <= now.date() and coursework_payload['end'] >= now.date():
                     ongoing_courseworks_labels.append(coursework_payload['title'])
 
                     # if module.credits/(100/coursework.percentage)>=10:
@@ -168,7 +170,7 @@ def coursework_scheduler(request):
                     last_data_list.append(nr_hours)
 
 
-                if object.percentage != 100 and coursework_payload['end'] > now.date():
+                if object.percentage != 100 and coursework_payload['end'] >= now.date():
 
                     graphdata_list.append(module.credits/(100/coursework.percentage))
                     # print(module.credits/(100/coursework.percentage))
@@ -179,32 +181,37 @@ def coursework_scheduler(request):
                     graphlabel_list.append(coursework.title)
 
 
-    # print("Ongoing Courseworks")
-    # print(ongoing_courseworks_labels)
-    # print(ongoing_courseworks_data)
     radar_data =[]
-    print("HERE")
-    print(last_data_list)
-    for el in last_data_list:
-        # print(int(round(el, 0)))
-        radar_data.append(int(round(el, 0)))
+    # for el in last_data_list:
+    #     # print(int(round(el, 0)))
+    #     radar_data.append(int(round(el, 0)))
+    #
+    # ongoing_colors =[]
+    # colors_used = []
+    # i = 0
+    # for coursework in coursework_list:
+    #     # if the cw deadline is in the past then keep its color
+    #     for el in ongoing_courseworks_labels:
+    #         print(coursework['title'])
+    #         if(coursework['title']==el):
+    #
+    #             ongoing_colors.append(coursework['color'])
+    #
+    #
+    #     if coursework['progress'] != 100 and coursework['end'] >= now.date():
+    #         coursework['color'] = color_list[i]
+    #
+    #         colors_used.append(color_list[i])
+    #         i = i + 1
 
+
+# hereeee
     print("RADAR DATA")
     print(radar_data)
-    # print(coursework_list)
     ongoing_colors =[]
     colors_used = []
     i = 0
     for coursework in coursework_list:
-        # if the cw deadline is in the past then keep its color
-        # for el in ongoing_courseworks_labels:
-        #     print(coursework['title'])
-        #     if(coursework['title']==el):
-        #         print("MATCH")
-        #         print(el)
-        #         ongoing_colors.append(coursework)
-
-
         if coursework['progress'] != 100 and coursework['end'] > now.date():
             coursework['color'] = color_list[i]
 
@@ -212,15 +219,13 @@ def coursework_scheduler(request):
             i = i + 1
 
 
-
-
-
-
         for el in ongoing_courseworks_labels:
             if(coursework['title']==el):
 
                 ongoing_colors.append(coursework['color'])
 
+    for el in last_data_list:
+        radar_data.append(int(round(el, 0)))
 
 
     # compute data for the last graph
@@ -374,7 +379,7 @@ def create_coursework(request):
         students = User.objects.filter(student=True)
         for student in students:
             print(student)
-            if UserModuleMembership.objects.get(user=student, module=module):
+            if UserModuleMembership.objects.filter(user=student, module=module):
                 # let the student know that a new coursework has been created
                 Notification.objects.create(user=student, notification="New coursework created. %s - %s. " % (new_coursework.title, module))
                 print("Notifications created")
@@ -415,11 +420,23 @@ def enroll_module(request):
         print("Module notification created")
         UserModuleMembership.objects.create(user=user, module=module)
 
+        # for all the coruseworks create a relationship
+        courseworks = Coursework.objects.filter(module=module)
+        print(courseworks)
+        for coursework in courseworks:
+            print("What you are looking at")
+            print(coursework)
+            UserCourseworkMembership.objects.create(user=user, coursework=coursework)
+
+
     return render(request,'sis/enroll_module.html', {'form':form })
+
+
 
 def assign_module(request):
     if not request.user.is_staff:
         return HttpResponseRedirect('/login_user/')
+
 
     students = User.objects.filter(student=True)
 
@@ -429,5 +446,6 @@ def assign_module(request):
         module = Module.objects.get(id=request.POST['module'])
 
         UserModuleMembership.objects.create(user=user, module=module)
+
 
     return render(request,'sis/enroll_module.html', {'form':form, 'students':students})

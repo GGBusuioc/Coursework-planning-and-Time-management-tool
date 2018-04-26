@@ -30,7 +30,7 @@
         }
       },
       header: {
-        left: 'prev, next, today myCustomButton',
+        left: 'prev, next, today',
         center: 'title',
         right: 'month, basicWeek, agendaFourDay'
       },
@@ -101,39 +101,40 @@
 
               <div class="col">
                  <h1>Coursework Priority<h1>
-
               </div>
+
               <div class="row">
-                <div class="col-6">
+                <div class="col">
                   <canvas id="myChart6"></canvas>
                 </div>
-                <div class="col-6">
+                <div class="col">
                   <canvas id="myChart7"></canvas>
                 </div>
               </div>
 
-                <div class="row">
-                  <div class="col" id="myDIV2">
-                    <canvas id="myChart2"></canvas>
-                  </div>
-                  <div class="col" id="myDIV3">
-                    <canvas id="myChart3"></canvas>
-                  </div>
+              <div class="row">
+                <div class="col" id="myDIV2">
+                  <canvas id="myChart2"></canvas>
                 </div>
-                <div class="row">
-                  <div class="col" id="myDIV4">
-                    <canvas id="myChart4"></canvas>
-                  </div>
-                  <div class="col" id="myDIV5">
-                    <canvas id="myChart5"></canvas>
-                  </div>
-
-
+                <div class="col" id="myDIV3">
+                  <canvas id="myChart3"></canvas>
                 </div>
+              </div>
+
+              <div class="row">
+                <div class="col" id="myDIV4">
+                  <canvas id="myChart4"></canvas>
+                </div>
+                <div class="col" id="myDIV5">
+                  <canvas id="myChart5"></canvas>
+                </div>
+              </div>
 
 
         </div>
       </div>
+
+
   </div>
 
 
@@ -182,7 +183,6 @@
               data: {{ongoing_courseworks_data}},
 
               backgroundColor: [{% for color in ongoing_colors %} "{{color}}", {% endfor %}],
-
           }]
       },
       options: {
