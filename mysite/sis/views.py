@@ -152,7 +152,7 @@ def coursework_scheduler(request):
             for object in objects:
                 coursework_payload['progress'] =  object.percentage
 
-                if coursework_payload['start'] <= now.date() and coursework_payload['end'] >= now.date():
+                if coursework_payload['start'] <= now.date() and coursework_payload['end'] >= now.date() and coursework_payload['progress']!=100:
                     ongoing_courseworks_labels.append(coursework_payload['title'])
 
                     # if module.credits/(100/coursework.percentage)>=10:
