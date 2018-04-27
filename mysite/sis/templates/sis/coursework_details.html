@@ -3,16 +3,24 @@
 
 {% block content %}
 
+
+{% if messages %}
+{% for message in messages %}
+
+
 {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
 
-<div class="alert alert-success alert-dismissible fade show" role="alert">
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-  <strong>{{message}}</strong>
-</div>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <strong>{{message}}</strong>
+    </div>
 {% endif %}
 
+
+{% endfor %}
+{% endif %}
 
 <div class="row">
   <div class="col-sm">
@@ -62,7 +70,6 @@
 
 
 </div>
-
 
 <div class="container">
 
