@@ -203,7 +203,7 @@
   var ctx = document.getElementById("myChart4");
   var myChart = new Chart(ctx, {
 
-      type: 'horizontalBar',
+      type: 'bar',
       data: {
           labels: [{% for label in graphlabel_list %} "{{label}}", {% endfor %}],
           datasets: [{
