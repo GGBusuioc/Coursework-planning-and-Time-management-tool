@@ -160,7 +160,7 @@ def coursework_scheduler(request):
 
                     ongoing_courseworks_data.append(module.credits/(100/coursework.percentage))
 
-                    nr_hours = (module.credits/(100/coursework.percentage) * 30) / 60
+                    nr_hours = (module.credits/(100/coursework.percentage) * 90) / 60
 
                     # if any coursework is big and above 10credits & there are more than 5 courseworks
 
