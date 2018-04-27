@@ -298,10 +298,14 @@ def coursework_details(request, module_id, coursework_id):
     print(user_cousework_object.percentage)
 
     form = CourseworkCompletedForm(request.POST or None, initial={'percentage': user_cousework_object.percentage})
-    # print(form.is_valid())
-    #
-    # print(form)
+
+
+
+
+
     if form.is_valid():
+
+        messages.info(request, "You have ")
         print(form.cleaned_data.get('percentage'))
         object = UserCourseworkMembership.objects.get(user=request.session['user_id'],coursework=coursework_id)
 

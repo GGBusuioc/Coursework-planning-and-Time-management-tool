@@ -133,7 +133,6 @@ class Notification(models.Model):
         return ("%s %s" % (self.user, self.notification))
 
 
-
 class UserModuleMembership(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     module = models.ForeignKey(Module, on_delete=models.CASCADE)
@@ -157,3 +156,6 @@ class UserCourseworkMembership(models.Model):
     percentage = models.IntegerField(default=0, choices=PERCENTAGE_CHOICES)
     def __str__(self):
         return ("%s %s" % (self.user, self.coursework))
+class Meta:
+    unique_together = ("user", "coursework")
+    index_together = ["user", "coursework"]
