@@ -92,66 +92,64 @@
 
 
 
-  <!-- <div class="row">
 
-      <div class="col">
-        <div class="container" id='calendar'></div>
-      </div>
+  <!-- <div class="row">-->
+  <!--  <div class="row">-->
+  <!--    <div class="col">-->
+  <!--      <div class="container" id='calendar'></div>-->
+  <!--    </div>-->
+  <!--    <div class="col">-->
+  <!--      <div class="row">-->
+  <!--        <canvas id="Hours"></canvas>-->
 
-      <div class="col">
+  <!--      </div>-->
+  <!--      <div class="row">-->
+  <!--        <canvas id="Overall"></canvas>-->
 
-        <div class="row">
-          <div class="col">
-            <canvas id="Hours"></canvas>
-          </div>
-        </div>
+  <!--      </div>-->
+  <!--      <div class="row">-->
+  <!--        <canvas id="Ongoing"></canvas>-->
 
-        <div class="row">
-          <div class="col">
-            <canvas id="Overall"></canvas>
-          </div>
-        </div>
+  <!--      </div>-->
+  <!--    </div>-->
+  <!--  </div>-->
 
-        <div class="row">
-          <div class="col">
-            <canvas id="Ongoing"></canvas>
-          </div>
-        </div>
-
-        </div>
-  </div> -->
+  <!--</div>-->
 
 
-<div class="col">
-
-
+<div class="container-fluid">
   <div class="row">
-    <div class="col">
-  <h1>calendar</h1>
-  <div class="container" id='calendar'></div>
+    <div class="col-md-8">
+        <div class="col" id='calendar'></div>
+    </div>
+
+
+
+    <div class="col-md-4">
+        <div class="row">
+            <div class="col-md">
+                <canvas id="Hours"></canvas>
+            </div>
+        </div>
+        <div class="row">
+             <div class="col-md">
+                <canvas id="Overall"></canvas>
+            </div>
+        </div>
+        <div class="row">
+             <div class="col-md">
+                <canvas id="Ongoing"></canvas>
+            </div>
+        </div>
 
     </div>
-    <div class="col">
-      <div class="row">
-    <h1>H1</h1>
-    <canvas id="Hours"></canvas>
-
-      </div>
-      <div class="row">
-        <h1>H2</h1>
-        <canvas id="Overall"></canvas>
-
-      </div>
-      <div class="row">
-        <h1>H3</h1>
-        <canvas id="Ongoing"></canvas>
 
 
-      </div>
-    </div>
   </div>
-
 </div>
+
+
+
 
 
   <script>
@@ -215,65 +213,7 @@
       }
   });
 
-  // var ctx = document.getElementById("myChart4");
-  // var myChart = new Chart(ctx, {
-  //
-  //     type: 'horizontalBar',
-  //     data: {
-  //         labels: [{% for label in graphlabel_list %} "{{label}}", {% endfor %}],
-  //         datasets: [{
-  //             label: 'Credits',
-  //             data: {{graphdata_list}},
-  //
-  //             backgroundColor: [{% for color in colors_used %} "{{color}}", {% endfor %}],
-  //
-  //         }]
-  //     },
-  //     options: {
-  //         scales: {
-  //             xAxes: [{
-  //                 ticks: {
-  //                     beginAtZero:true
-  //                 }
-  //             }]
-  //         },
-  //         title: {
-  //           display: true,
-  //           text: 'Overall coursework priority chart'
-  //       }
-  //
-  //     }
-  // });
 
-  // var ctx = document.getElementById("myChart5");
-  // var myChart = new Chart(ctx, {
-  //
-  //     type: 'bar',
-  //     data: {
-  //         labels: [{% for label in ongoing_courseworks_labels %} "{{label}}", {% endfor %}],
-  //         datasets: [{
-  //             label: 'Credits',
-  //             data: {{ongoing_courseworks_data}},
-  //
-  //             backgroundColor: [{% for color in ongoing_colors %} "{{color}}", {% endfor %}],
-  //
-  //         }]
-  //     },
-  //     options: {
-  //         scales: {
-  //             yAxes: [{
-  //                 ticks: {
-  //                     beginAtZero:true
-  //                 }
-  //             }]
-  //         },
-  //         title: {
-  //           display: true,
-  //           text: 'Ongoing courseworks priority chart'
-  //       }
-  //
-  //     }
-  // });
 
 
   var ctx = document.getElementById("Hours");
@@ -305,36 +245,6 @@
 
       }
   });
-
-  // var ctx = document.getElementById("myChart7");
-  // var myChart = new Chart(ctx, {
-  //
-  //     type: 'doughnut',
-  //     data: {
-  //         labels: [{% for label in ongoing_courseworks_labels %} "{{label}}", {% endfor %}],
-  //         datasets: [{
-  //             label: 'Credits',
-  //             data: {{radar_data}},
-  //
-  //             backgroundColor: [{% for color in ongoing_colors %} "{{color}}", {% endfor %}],
-  //
-  //         }]
-  //     },
-  //     options: {
-  //         scales: {
-  //             yAxes: [{
-  //                 ticks: {
-  //                     beginAtZero:true
-  //                 }
-  //             }]
-  //         },
-  //         title: {
-  //           display: true,
-  //           text: 'Number of hours you should spend today on studying'
-  //       }
-  //
-  //     }
-  // });
 
 
   </script>
