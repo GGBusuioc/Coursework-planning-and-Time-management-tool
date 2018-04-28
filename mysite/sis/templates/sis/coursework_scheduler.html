@@ -171,16 +171,18 @@
           }]
       },
       options: {
-          scales: {
-              yAxes: [{
-                  ticks: {
-                      beginAtZero:true
-                  }
-              }]
-          },
+        //   scales: {
+        //       yAxes: [{
+        //           ticks: {
+        //               beginAtZero:true
+        //           }
+        //       }]
+        //   },
           title: {
             display: true,
-            text: 'Overall coursework priority chart'
+            text: 'Overall coursework priority chart',
+            fontSize:20
+
         }
       }
   });
@@ -199,16 +201,19 @@
           }]
       },
       options: {
-          scales: {
-              yAxes: [{
-                  ticks: {
-                      beginAtZero:true
-                  }
-              }]
-          },
+         legend: {
+            labels: {
+                // This more specific font property overrides the global property
+                fontColor: 'black',
+
+            }
+            position: 'bottom',
+         }
           title: {
             display: true,
-            text: 'Ongoing courseworks priority chart'
+            text: 'Ongoing courseworks priority chart',
+             fontSize:20,
+
         }
       }
   });
@@ -231,16 +236,18 @@
           }]
       },
       options: {
-          scales: {
-              yAxes: [{
-                  ticks: {
-                      beginAtZero:true
-                  }
-              }]
-          },
+          legend: {
+            labels: {
+                // This more specific font property overrides the global property
+                fontColor: 'black',
+            }
+            position:'bottom',
+          }
           title: {
             display: true,
-            text: 'Number of hours you should spend today on studying'
+            text: 'Number of hours to spend today on studying',
+            fontSize:20
+
         }
 
       }
