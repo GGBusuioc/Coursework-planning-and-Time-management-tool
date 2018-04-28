@@ -25,7 +25,7 @@ SECRET_KEY = '-g09-_9^(^-=n+$l+4)w)!)mcp4birxwpjepi3zr6^6*1(@vy_'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['sc15ggb.pythonanywhere.com']
+ALLOWED_HOSTS = ['sc15ggb.pythonanywhere.com', 'localhost']
 
 
 # Application definition
@@ -134,4 +134,3 @@ AUTH_USER_MODEL = 'sis.User'
 #AUTHENTICATION_BACKENDS = ('sis.backends.MyAuthBackend','django.contrib.auth.backends.ModelBackend',)
 # Redirect to home URL after login (Default redirects to /accounts/profile/)
 LOGIN_REDIRECT_URL = '/'
-
