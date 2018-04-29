@@ -300,9 +300,6 @@ def coursework_details(request, module_id, coursework_id):
     form = CourseworkCompletedForm(request.POST or None, initial={'percentage': user_cousework_object.percentage})
 
 
-
-
-
     if form.is_valid():
 
 
@@ -322,7 +319,6 @@ def coursework_details(request, module_id, coursework_id):
     # search for the coursework
     coursework = Coursework.objects.get(id=coursework_id)
     user_cousework_object = UserCourseworkMembership.objects.get(user=request.session['user_id'],coursework=coursework)
-    # get its specifications
 
 
     # get the number of credits for the project
@@ -358,7 +354,6 @@ def create_module(request):
 
         Module.objects.create(name=name, description=description)
     return render(request,'sis/create_module.html', {'form':form})
-
 
 
 def create_coursework(request):

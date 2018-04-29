@@ -16,7 +16,6 @@
     $(document).ready(function() {
 
 
-    // page is now ready, initialize the calendar...
 
     $('#calendar').fullCalendar({
 
@@ -43,13 +42,6 @@
       }
     },
 
-        // put your options and callbacks here
-        // weekends: false,
-
-        dayClick: function() {
-          alert('a day has been clicked!');
-        },
-
       events: [
       {% for dict in coursework_list %}
          {
@@ -69,6 +61,8 @@
     ],
 
      displayEventTime: false,
+
+     // on hover effect for displaying the percentage
      eventRender: function(event, element, view) {
        element.qtip({
 
@@ -90,26 +84,22 @@
   <br>
 
 
-
-
-
-
 <div class="container-fluid">
   <div class="row">
-  <div class="col-12 col-md-8" id='calendar'></div>
-  <div class="col-12 col-md-4">
+  <div class="col-sm-12 col-md-8" id='calendar'></div>
+  <div class="col-sm-12 col-md-4">
     <div class="row">
-        <div class="col">
+        <div class="col-sm-12">
             <canvas id="Hours"></canvas>
         </div>
     </div>
     <div class="row">
-         <div class="col">
+         <div class="col-sm-12">
             <canvas id="Overall"></canvas>
         </div>
     </div>
     <div class="row">
-         <div class="col">
+         <div class="col-sm-12">
             <canvas id="Ongoing"></canvas>
         </div>
     </div>
