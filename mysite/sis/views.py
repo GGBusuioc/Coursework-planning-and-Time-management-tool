@@ -307,7 +307,7 @@ def coursework_details(request, module_id, coursework_id):
 
 
         messages.info(request, "You have marked %s as being %d percent complete. " % (coursework.title, form.cleaned_data.get('percentage')))
-        
+
 
         print(form.cleaned_data.get('percentage'))
         object = UserCourseworkMembership.objects.get(user=request.session['user_id'],coursework=coursework_id)
