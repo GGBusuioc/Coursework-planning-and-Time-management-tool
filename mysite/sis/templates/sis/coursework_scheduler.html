@@ -15,10 +15,7 @@
   <script>
     $(document).ready(function() {
 
-
-
     $('#calendar').fullCalendar({
-
 
       customButtons: {
         myCustomButton: {
@@ -33,7 +30,7 @@
         center: 'title',
         right: 'month, basicWeek, agendaFourDay'
       },
-
+      // two months view
       views: {
       agendaFourDay: {
         type: 'basic',
@@ -43,11 +40,13 @@
     },
 
       events: [
+      // creating the events in the callendar
       {% for dict in coursework_list %}
          {
            title  :   '{{dict.module_name}} - {{dict.title}}',
            start  :   '{{dict.start}}',
            end    :   '{{dict.end}}',
+           // displaying status
            {% if dict.progress == 100 %}
            status: "FINISHED !!",
            {% else %}

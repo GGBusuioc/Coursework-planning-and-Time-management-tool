@@ -52,9 +52,6 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser):
     email     = models.EmailField(max_length=255, unique=True)
-    # name      = models.CharField(max_length=255, blank=True, null=True)
-    # surname   = models.CharField(max_length=255, blank=True, null=True)
-    #timestamp = models.DateTimeField(auto_now_add=True)
 
     # able to login
     active    = models.BooleanField(default=True)
