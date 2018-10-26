@@ -28,4 +28,4 @@ The aim is to design a coursework planning and time management tool for the stud
 The main method of testing used in this project was user testing. I asked a number of relevant users for permission to test my software using their favourite browser. For this project, the relevant users are students from the School of Computing department from the University of Leeds which are currently in their first, second or third year of study.
 
 ## The outcome
-[picture alt](https://imgur.com/tqNzVIs)
+![alt text](https://i.imgur.com/tqNzVIs.png)
